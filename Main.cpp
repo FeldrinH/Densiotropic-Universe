@@ -4,6 +4,7 @@
 #include <string>
 #include "cmdHandler.h"
 #include <sstream>
+#include "UniverseChunk.h"
 
 #define VERSION_NAME "Densiotropic Universe 0.1"
 
@@ -38,12 +39,15 @@ int main(int, char**)
 	string cmdIn = "";
 	thread inputHandler(getCmdIn, cmdIn, isRunning);
 
+	UniverseChunk* Universe = new UniverseChunk();
+
 	while (isRunning)
 	{
 		while (SDL_PollEvent(&mainEvent) != 0)
 		{
 			if (mainEvent.type == SDL_QUIT)
 			{
+				delete Universe;
 				cout << "Deuniversifying..." << endl;
 				isRunning = false;
 			}
@@ -68,6 +72,7 @@ int main(int, char**)
 		{
 		}
 
+		
 	}
 
 	SDL_Quit();
