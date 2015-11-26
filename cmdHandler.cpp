@@ -6,7 +6,7 @@
 
 void getCmdIn(std::string &inString, const bool &isRunning)
 {
-	while (isRunning)
+	while (true)
 	{
 		std::getline(std::cin, inString);
 		//std::this_thread::sleep_for(std::chrono::seconds(1));
