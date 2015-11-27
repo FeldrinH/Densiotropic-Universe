@@ -6,3 +6,6 @@ In a Densiotropic Universe light propagates as a densiotropic quantity with 8 di
 For each cell of a Diffusional universe light has 9 numeric quantities:
 * 8 diffusion rates (one for each adjacent cell.)
 * Total density of light
+
+Each cycle all light in a cell will diffuse into superposition distributed across 8 adjacent cells based on their diffusion ratio.
+Once all light has diffused into superposition, they will fall back into their normal state retaining their densities from superposition.
