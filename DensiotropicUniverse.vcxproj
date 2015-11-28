@@ -72,13 +72,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cmdHandler.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="UniverseChunk.cpp" />
+    <ClCompile Include="src\cmdHandler.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\UniverseChunk.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cmdHandler.h" />
-    <ClInclude Include="UniverseChunk.h" />
+    <ClInclude Include="src\cmdHandler.h" />
+    <ClInclude Include="src\UniverseChunk.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,21 +18,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="src\cmdHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cmdHandler.cpp">
+    <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UniverseChunk.cpp">
+    <ClCompile Include="src\UniverseChunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cmdHandler.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="src\cmdHandler.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UniverseChunk.h">
+    <ClInclude Include="src\UniverseChunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
