@@ -1,8 +1,15 @@
 #pragma once
+
+#include "Cell.h"
+#include <vector>
+
+using namespace std;
+
 class UniverseChunk
 {
 public:
-	UniverseChunk();
+	UniverseChunk(int x, int y);
 	~UniverseChunk();
+	vector<vector<Cell>> cellMatrix;
 };
 

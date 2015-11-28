@@ -39,7 +39,7 @@ int main(int, char**)
 	string cmdIn = "";
 	thread inputHandler(getCmdIn, cmdIn, isRunning);
 
-	UniverseChunk* Universe = new UniverseChunk();
+	UniverseChunk* Universe = new UniverseChunk(x,y);
 
 	while (isRunning)
 	{

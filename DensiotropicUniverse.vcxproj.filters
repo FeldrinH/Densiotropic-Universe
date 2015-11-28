@@ -27,12 +27,18 @@
     <ClCompile Include="src\UniverseChunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\cmdHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\UniverseChunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
