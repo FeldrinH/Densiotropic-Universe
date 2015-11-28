@@ -72,13 +72,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Cell.cpp" />
+    <ClCompile Include="src\MatterCell.cpp" />
+    <ClCompile Include="src\LightCell.cpp" />
     <ClCompile Include="src\cmdHandler.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\UniverseChunk.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Cell.h" />
+    <ClInclude Include="src\MatterCell.h" />
+    <ClInclude Include="src\LightCell.h" />
     <ClInclude Include="src\cmdHandler.h" />
     <ClInclude Include="src\UniverseChunk.h" />
   </ItemGroup>

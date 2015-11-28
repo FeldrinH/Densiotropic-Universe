@@ -17,7 +17,7 @@ int main(int, char**)
 		cout << "SDL_Init Error: " << SDL_GetError() << endl;
 		return 1;
 	}
-
+	
 	bool isRunning = true;
 
 	string size = "";
@@ -25,7 +25,7 @@ int main(int, char**)
 	int x, y = 0;
 
 	istringstream s(size);
-	s >> x, y;
+	s >> x >> y;
 	if (x == 0 || y == 0)
 	{
 		x = 640;

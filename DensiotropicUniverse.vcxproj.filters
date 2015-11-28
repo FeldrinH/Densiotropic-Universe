@@ -27,7 +27,10 @@
     <ClCompile Include="src\UniverseChunk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Cell.cpp">
+    <ClCompile Include="src\LightCell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MatterCell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,7 +41,10 @@
     <ClInclude Include="src\UniverseChunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Cell.h">
+    <ClInclude Include="src\LightCell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MatterCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

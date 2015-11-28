@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Cell.h"
+#include "LightCell.h"
+#include "MatterCell.h"
 #include <vector>
 
 using namespace std;
@@ -10,6 +11,8 @@ class UniverseChunk
 public:
 	UniverseChunk(int x, int y);
 	~UniverseChunk();
-	vector<vector<Cell>> cellMatrix;
+	vector<vector<MatterCell>> matterMatrix;
+	vector<vector<LightCell>> lightMatrix1;
+	vector<vector<LightCell>> lightMatrix2;
 };
 
