@@ -6,6 +6,7 @@
 #include <sstream>
 #include "UniverseChunk.h"
 #include "Main.h"
+#include "LightEmitter.h"
 
 //unsigned int fp_control_state = _controlfp(_EM_INEXACT, _MCW_EM);
 
@@ -46,7 +47,7 @@ int main(int, char**)
 	thread inputHandler(getCmdIn, cmdIn, isRunning);
 
 	Universe = UniverseChunk(xSize,ySize);
-	//Universe.lightMatrixBase[320][320] = LightCell(4096.0F, { 1.0F,1.0F,1.0F,1.0F,0.0F });
+	vector<LightEmitter> lightEmitters;
 
 	while (isRunning)
 	{
@@ -65,7 +66,12 @@ int main(int, char**)
 			{
 				if (mainEvent.button.button == SDL_BUTTON_LEFT)
 				{
-
+					cout << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].lightDensity;
+					for (int i = 0; i < 5; i++)
+					{
+						cout << " " << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].diffuseRatio[i];
+					}
+					cout << endl;
 				}
 				else if (mainEvent.button.button == SDL_BUTTON_RIGHT)
 				{
@@ -80,8 +86,10 @@ int main(int, char**)
 
 		for (int i = 0; i < 10; i++)
 		{
-		Universe.lightMatrixBase[400][400].addData(192.0f, { 1.0F,0.0F,1.0F,1.0F,0.0F }, 64.0f);
-		Universe.lightMatrixBase[401][300].addData(192.0f, { 0.0F,1.0F,1.0F,1.0F,0.0F }, 64.0f);
+		Universe.lightMatrixBase[400][400].addData(96.0f, { 1.0F,0.0F,1.0F,1.0F,0.0F }, 32.0f);
+		Universe.lightMatrixBase[400][300].addData(96.0f, { 0.0F,1.0F,1.0F,1.0F,0.0F }, 32.0f);
+		Universe.lightMatrixBase[100][100].addData(160.0f, { 1.0F,1.0F,1.0F,1.0F,1.0F }, 32.0f);
+		Universe.lightMatrixBase[150][110].addData(64.0f, { 0.0F,0.0F,1.0F,0.0F,0.0F }, 64.0f);
 	
 			for (int x = 0; x < xSize; x++)
 			{
