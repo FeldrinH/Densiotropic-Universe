@@ -6,6 +6,8 @@
 
 LightCell::LightCell()
 {
+	lightDensity = 0;
+	diffuseRatio = {0.0f,0.0f,0.0f,0.0f,0.0f};
 }
 
 LightCell::LightCell(float dens, array<float, 5> ratio)
@@ -72,6 +74,16 @@ int LightCell::getYDir(int dir)
 
 void LightCell::draw(int x, int y)
 {
-	SDL_SetRenderDrawColor(renderer, lightDensity, lightDensity, lightDensity, 255);
-	SDL_RenderDrawPoint(renderer, x, y);
+	if (lightDensity != 0.0F)
+	{
+		if (lightDensity > 255.0F)
+		{
+			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		}
+		else
+		{
+			SDL_SetRenderDrawColor(renderer, lightDensity, lightDensity, lightDensity, 255);
+		}
+		SDL_RenderDrawPoint(renderer, x, y);
+	}
 }

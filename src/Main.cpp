@@ -76,8 +76,8 @@ int main(int, char**)
 		{
 		}
 
-		Universe.lightMatrixBase[300][400] = LightCell(4096.0F, { 1.0F,0.0F,1.0F,0.0F,0.0F });
-		Universe.lightMatrixBase[400][300] = LightCell(4096.0F, { 1.0F,0.0F,1.0F,0.0F,0.0F });
+		Universe.lightMatrixBase[100][200] = LightCell(128.0f, { 1.0F,0.0F,0.0F,0.0F,0.0F });
+		Universe.lightMatrixBase[200][100] = LightCell(256.0f, { 0.0F,0.0F,1.0F,0.0F,0.0F });
 		//Universe.lightMatrixBase[300][400].addData(4096.0F, { 0.0F,0.0F,1.0F,0.0F,0.0F }, 2048.0F);
 		//Universe.lightMatrixBase[400][300].addData(4096.0F, { 1.0F,0.0F,0.0F,0.0F,0.0F }, 2048.0F);
 
