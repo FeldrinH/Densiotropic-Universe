@@ -5,12 +5,14 @@
 #include "cmdHandler.h"
 #include <sstream>
 #include "UniverseChunk.h"
+#include "Main.h"
 
 #define VERSION_NAME "Densiotropic Universe 0.2"
 
 using namespace std;
 
 UniverseChunk Universe;
+SDL_Renderer* renderer;
 
 int main(int, char**) 
 {
@@ -24,24 +26,25 @@ int main(int, char**)
 
 	string size = "";
 	getline(cin, size);
-	int x, y = 0;
+	int xSize, ySize = 0;
 
 	istringstream s(size);
-	s >> x >> y;
-	if (x == 0 || y == 0)
+	s >> xSize >> ySize;
+	if (xSize == 0 || ySize == 0)
 	{
-		x = 640;
-		y = 640;
+		xSize = 640;
+		ySize = 640;
 	}
 
-	SDL_Window* window = SDL_CreateWindow(VERSION_NAME, 20, 50, x, y, SDL_WINDOW_SHOWN | SDL_WINDOW_MOUSE_FOCUS);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+	SDL_Window* window = SDL_CreateWindow(VERSION_NAME, 20, 50, xSize, ySize, SDL_WINDOW_SHOWN | SDL_WINDOW_MOUSE_FOCUS);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
 	SDL_Event mainEvent;
 
 	string cmdIn = "";
 	thread inputHandler(getCmdIn, cmdIn, isRunning);
 
-	Universe = new UniverseChunk(x,y);
+	Universe = UniverseChunk(xSize,ySize);
+	//Universe.lightMatrixBase[320][320] = LightCell(4096.0F, { 1.0F,0.0F,1.0F,0.0F,0.0F });
 
 	while (isRunning)
 	{
@@ -49,7 +52,6 @@ int main(int, char**)
 		{
 			if (mainEvent.type == SDL_QUIT)
 			{
-				delete Universe;
 				cout << "Deuniversifying..." << endl;
 				isRunning = false;
 			}
@@ -74,7 +76,29 @@ int main(int, char**)
 		{
 		}
 
-		
+		Universe.lightMatrixBase[300][400] = LightCell(4096.0F, { 1.0F,0.0F,1.0F,0.0F,0.0F });
+		Universe.lightMatrixBase[400][300] = LightCell(4096.0F, { 1.0F,0.0F,1.0F,0.0F,0.0F });
+		//Universe.lightMatrixBase[300][400].addData(4096.0F, { 0.0F,0.0F,1.0F,0.0F,0.0F }, 2048.0F);
+		//Universe.lightMatrixBase[400][300].addData(4096.0F, { 1.0F,0.0F,0.0F,0.0F,0.0F }, 2048.0F);
+
+		for (int x = 0; x < xSize; x++)
+		{
+			for (int y = 0; y < ySize; y++)
+			{
+				Universe.lightMatrixBase[x][y].diffuse(x,y);
+			}
+		}
+		Universe.lightMatrixBase.swap(Universe.lightMatrixSuper);
+
+		for (int x = 0; x < xSize; x++)
+		{
+			for (int y = 0; y < ySize; y++)
+			{
+				Universe.lightMatrixBase[x][y].draw(x,y);
+			}
+		}
+
+		SDL_RenderPresent(renderer);
 	}
 
 	SDL_Quit();

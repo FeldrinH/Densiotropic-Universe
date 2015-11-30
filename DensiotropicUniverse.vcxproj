@@ -79,6 +79,7 @@
     <ClCompile Include="src\UniverseChunk.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\MatterCell.h" />
     <ClInclude Include="src\LightCell.h" />
     <ClInclude Include="src\cmdHandler.h" />

@@ -47,5 +47,8 @@
     <ClInclude Include="src\MatterCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
