@@ -4,6 +4,8 @@
 #include "SDL.h"
 #include <iostream>
 
+using namespace std;
+
 LightCell::LightCell()
 {
 	lightDensity = 0;
@@ -34,13 +36,20 @@ LightCell::~LightCell()
 
 void LightCell::diffuse(int x, int y)
 {
-	if (lightDensity == 0.0F)
+	/*if (lightDensity != lightDensity)
+	{
+		lightDensity = 0.0f;
+		diffuseRatio.fill(0.0F);
+		cout << "NaN" << endl;
+	}*/
+	if (lightDensity == 0.0f)
 	{
 		return;
 	}
 
 	float ratioMult = 1 / lightDensity;
-	
+
+
 	for (int i = 0; i < 5; i++)
 	{
 		if (x + getXDir(i) > -1 && x + getXDir(i) < Universe.x && y + getYDir(i) > -1 && y + getYDir(i) < Universe.y)
@@ -59,6 +68,12 @@ void LightCell::addData(float dens, array<float, 5> ratio, float mult)
 	for (int i = 0; i < 5; i++)
 	{
 		diffuseRatio[i] += ratio[i] * mult;
+		if (diffuseRatio[i] != diffuseRatio[i])
+		{
+			lightDensity = 0.0f;
+			diffuseRatio.fill(0.0F);
+			//cout << "NaNdata" << endl;
+		}
 	}
 }
 

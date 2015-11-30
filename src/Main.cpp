@@ -7,6 +7,8 @@
 #include "UniverseChunk.h"
 #include "Main.h"
 
+//unsigned int fp_control_state = _controlfp(_EM_INEXACT, _MCW_EM);
+
 #define VERSION_NAME "Densiotropic Universe 0.2"
 
 using namespace std;
@@ -76,8 +78,8 @@ int main(int, char**)
 		{
 		}
 
-		Universe.lightMatrixBase[100][200] = LightCell(128.0f, { 1.0F,0.0F,0.0F,0.0F,0.0F });
-		Universe.lightMatrixBase[200][100] = LightCell(256.0f, { 0.0F,0.0F,1.0F,0.0F,0.0F });
+		Universe.lightMatrixBase[100][200] = LightCell(256.0f, { 1.0F,0.0F,0.0F,0.0F,0.0F });
+		Universe.lightMatrixBase[200][100] = LightCell(512.0f, { 0.0F,0.0F,1.0F,0.0F,0.0F });
 		//Universe.lightMatrixBase[300][400].addData(4096.0F, { 0.0F,0.0F,1.0F,0.0F,0.0F }, 2048.0F);
 		//Universe.lightMatrixBase[400][300].addData(4096.0F, { 1.0F,0.0F,0.0F,0.0F,0.0F }, 2048.0F);
 
