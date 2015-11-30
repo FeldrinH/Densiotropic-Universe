@@ -46,7 +46,7 @@ int main(int, char**)
 	thread inputHandler(getCmdIn, cmdIn, isRunning);
 
 	Universe = UniverseChunk(xSize,ySize);
-	//Universe.lightMatrixBase[320][320] = LightCell(4096.0F, { 1.0F,0.0F,1.0F,0.0F,0.0F });
+	//Universe.lightMatrixBase[320][320] = LightCell(4096.0F, { 1.0F,1.0F,1.0F,1.0F,0.0F });
 
 	while (isRunning)
 	{
@@ -78,20 +78,20 @@ int main(int, char**)
 		{
 		}
 
-		Universe.lightMatrixBase[100][200] = LightCell(256.0f, { 1.0F,0.0F,0.0F,0.0F,0.0F });
-		Universe.lightMatrixBase[200][100] = LightCell(512.0f, { 0.0F,0.0F,1.0F,0.0F,0.0F });
-		//Universe.lightMatrixBase[300][400].addData(4096.0F, { 0.0F,0.0F,1.0F,0.0F,0.0F }, 2048.0F);
-		//Universe.lightMatrixBase[400][300].addData(4096.0F, { 1.0F,0.0F,0.0F,0.0F,0.0F }, 2048.0F);
-
-		for (int x = 0; x < xSize; x++)
+		for (int i = 0; i < 10; i++)
 		{
-			for (int y = 0; y < ySize; y++)
+		Universe.lightMatrixBase[400][400].addData(192.0f, { 1.0F,0.0F,1.0F,1.0F,0.0F }, 64.0f);
+		Universe.lightMatrixBase[401][300].addData(192.0f, { 0.0F,1.0F,1.0F,1.0F,0.0F }, 64.0f);
+	
+			for (int x = 0; x < xSize; x++)
 			{
-				Universe.lightMatrixBase[x][y].diffuse(x,y);
+				for (int y = 0; y < ySize; y++)
+				{
+					Universe.lightMatrixBase[x][y].diffuse(x, y);
+				}
 			}
+			Universe.lightMatrixBase.swap(Universe.lightMatrixSuper);
 		}
-		Universe.lightMatrixBase.swap(Universe.lightMatrixSuper);
-
 		for (int x = 0; x < xSize; x++)
 		{
 			for (int y = 0; y < ySize; y++)

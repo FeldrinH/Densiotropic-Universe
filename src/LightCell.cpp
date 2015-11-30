@@ -42,7 +42,7 @@ void LightCell::diffuse(int x, int y)
 		diffuseRatio.fill(0.0F);
 		cout << "NaN" << endl;
 	}*/
-	if (lightDensity == 0.0f)
+	if (lightDensity < 0.015625f)
 	{
 		return;
 	}
@@ -89,7 +89,7 @@ int LightCell::getYDir(int dir)
 
 void LightCell::draw(int x, int y)
 {
-	if (lightDensity != 0.0F)
+	if (lightDensity > 0.5F)
 	{
 		if (lightDensity > 255.0F)
 		{
