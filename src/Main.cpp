@@ -6,9 +6,11 @@
 #include <sstream>
 #include "UniverseChunk.h"
 
-#define VERSION_NAME "Densiotropic Universe 0.1"
+#define VERSION_NAME "Densiotropic Universe 0.2"
 
 using namespace std;
+
+UniverseChunk Universe;
 
 int main(int, char**) 
 {
@@ -39,7 +41,7 @@ int main(int, char**)
 	string cmdIn = "";
 	thread inputHandler(getCmdIn, cmdIn, isRunning);
 
-	UniverseChunk* Universe = new UniverseChunk(x,y);
+	Universe = new UniverseChunk(x,y);
 
 	while (isRunning)
 	{

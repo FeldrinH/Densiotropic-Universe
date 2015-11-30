@@ -2,12 +2,21 @@
 
 #include <cstdint>
 
+enum Direction {Up,Down,Middle,Left,Right};
+
 class LightCell
 {
 public:
 	LightCell();
 	~LightCell();
-	uint8_t lightDensity;
-	uint8_t diffuseRatio[3][3];
+	float lightDensity;
+	float diffuseRatio[5];
+
+	void diffuse(int x, int y);
+	static int getXDir(int dir);
+	static int getYDir(int dir);
+
+	void addDensity(float dens);
+	void addRatio(float ratio[5], float mult);
 };
 
