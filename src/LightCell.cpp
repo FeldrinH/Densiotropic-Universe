@@ -46,3 +46,16 @@ int LightCell::getYDir(int dir)
 {
 	return dir == Up ? -1 : dir == Down ? 1 : 0;
 }
+
+void LightCell::addDensity(float dens)
+{
+	lightDensity += dens;
+}
+
+void LightCell::addRatio(float ratio[5], float mult)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		diffuseRatio[i] += ratio[i]*mult;
+	}
+}
