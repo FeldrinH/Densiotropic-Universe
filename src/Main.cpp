@@ -52,6 +52,8 @@ int main(int, char**)
 	
 	LightEmitter heldEmitter(0.0f, {0.0f,0.0f,0.0f,0.0f,0.0f});
 
+	int speed = 10;
+
 	while (isRunning)
 	{
 		//cout << cmdString << endl;
@@ -126,11 +128,23 @@ int main(int, char**)
 			}
 			else if (command == "undo")
 			{
-				lightEmitters.pop_back();
+				if (!lightEmitters.empty())
+				{
+					lightEmitters.pop_back();
+				}
 			}
 			else if (command == "clear")
 			{
 				lightEmitters.clear();
+			}
+			else if (command == "reset")
+			{
+				Universe = UniverseChunk(xSize, ySize);
+			}
+			else if (command == "speed")
+			{
+				cmdIn >> speed;
+				cout << "Set speed: " << speed << endl;
 			}
 			cmdString = "";
 		}
@@ -139,7 +153,7 @@ int main(int, char**)
 			
 		}
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < speed; i++)
 		{
 			for (int e = 0; e < lightEmitters.size(); e++)
 			{
