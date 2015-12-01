@@ -13,6 +13,7 @@ public:
 	LightCell();
 	LightCell(float dens, array<float,5> ratio);
 	~LightCell();
+
 	float lightDensity;
 	array<float, 5> diffuseRatio;
 

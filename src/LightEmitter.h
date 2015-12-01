@@ -1,9 +1,11 @@
 #pragma once
+#include <array>
+using namespace std;
+
 class LightEmitter
 {
 public:
-	LightEmitter();
-	LightEmitter(int x, int y)
+	LightEmitter(int x, int y, float dens, array<float, 5> ratio);
 	~LightEmitter();
 
 	int x, y;
