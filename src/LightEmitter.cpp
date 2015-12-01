@@ -1,6 +1,6 @@
 #include "LightEmitter.h"
 
-LightEmitter::LightEmitter(int x, int y, float dens, array<float, 5> ratio) : x(x), y(y)
+LightEmitter::LightEmitter(float dens, array<float, 5> ratio)
 {
 	float ratioMult = 0;
 
@@ -16,8 +16,4 @@ LightEmitter::LightEmitter(int x, int y, float dens, array<float, 5> ratio) : x(
 
 	lightDensity = dens;
 	diffuseRatio = ratio;
-}
-
-LightEmitter::~LightEmitter()
-{
 }

@@ -5,3 +5,5 @@
 
 extern UniverseChunk Universe;
 extern SDL_Renderer* renderer;
+
+extern std::string cmdString;

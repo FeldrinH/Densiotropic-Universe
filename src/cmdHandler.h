@@ -1,3 +1,4 @@
 #pragma once
+#include <string>
 
-void getCmdIn(std::string &inString, const bool &isRunning);
+void getCmdIn();

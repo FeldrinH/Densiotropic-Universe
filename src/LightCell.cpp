@@ -41,6 +41,8 @@ void LightCell::diffuse(int x, int y)
 		lightDensity = 0.0f;
 		diffuseRatio.fill(0.0F);
 		cout << "NaN" << endl;
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderDrawPoint(renderer, x, y);
 	}*/
 	if (lightDensity < 0.015625f)
 	{
@@ -72,7 +74,7 @@ void LightCell::addData(float dens, array<float, 5> ratio, float mult)
 		{
 			lightDensity = 0.0f;
 			diffuseRatio.fill(0.0F);
-			//cout << "NaNdata" << endl;
+			cout << "NaN in addData()" << endl;
 		}
 	}
 }

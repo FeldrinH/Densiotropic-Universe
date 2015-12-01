@@ -2,11 +2,11 @@
 #include <SDL.h>
 #include <thread>
 #include <string>
-#include "cmdHandler.h"
 #include <sstream>
 #include "UniverseChunk.h"
 #include "Main.h"
 #include "LightEmitter.h"
+#include "cmdHandler.h"
 
 //unsigned int fp_control_state = _controlfp(_EM_INEXACT, _MCW_EM);
 
@@ -16,15 +16,17 @@ using namespace std;
 
 UniverseChunk Universe;
 SDL_Renderer* renderer;
+string cmdString = "12";
 
 int main(int, char**) 
 {
+	
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
 		cout << "SDL_Init Error: " << SDL_GetError() << endl;
 		return 1;
 	}
-	
+
 	bool isRunning = true;
 
 	string size = "";
@@ -43,14 +45,16 @@ int main(int, char**)
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
 	SDL_Event mainEvent;
 
-	string cmdIn = "";
-	thread inputHandler(getCmdIn, cmdIn, isRunning);
+	thread inputHandler(getCmdIn);
 
 	Universe = UniverseChunk(xSize,ySize);
 	vector<LightEmitter> lightEmitters;
+	
+	LightEmitter heldEmitter(0.0f, {0.0f,0.0f,0.0f,0.0f,0.0f});
 
 	while (isRunning)
 	{
+		//cout << cmdString << endl;
 		while (SDL_PollEvent(&mainEvent) != 0)
 		{
 			if (mainEvent.type == SDL_QUIT)
@@ -73,23 +77,74 @@ int main(int, char**)
 					}
 					cout << endl;
 				}
-				else if (mainEvent.button.button == SDL_BUTTON_RIGHT)
+				else if (mainEvent.button.button == SDL_BUTTON_RIGHT && heldEmitter.lightDensity != 0.0f)
 				{
-
+					for (int e = 0; e < lightEmitters.size(); e++)
+					{
+						if (lightEmitters[e].x == mainEvent.button.x && lightEmitters[e].x == mainEvent.button.y)
+						{
+							lightEmitters.erase(lightEmitters.begin() + e);
+							break;
+						}
+					}
+					heldEmitter.x = mainEvent.button.x;
+					heldEmitter.y = mainEvent.button.y;
+					lightEmitters.push_back(heldEmitter);
+					cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
 				}
 			}
 		}
-
-		if (cmdIn != "")
+		if (cmdString != "")
 		{
+			istringstream cmdIn(cmdString);
+			string command;
+			cmdIn >> command;
+			if (command == "emitter")
+			{
+				float lightDensity;
+				array<float, 5> diffuseRatio;
+				cmdIn >> lightDensity >> diffuseRatio[Up] >> diffuseRatio[Down] >> diffuseRatio[Left] >> diffuseRatio[Right] >> diffuseRatio[Middle];
+				heldEmitter = LightEmitter(lightDensity, diffuseRatio);
+				cout << "Emitter set: " << lightDensity << endl;
+			}
+			else if (command == "emplace" && heldEmitter.lightDensity != 0.0f)
+			{
+				int x, y;
+				cmdIn >> x >> y;
+				for (int e = 0; e < lightEmitters.size(); e++)
+				{
+					if (lightEmitters[e].x == x && lightEmitters[e].x == y)
+					{
+						lightEmitters.erase(lightEmitters.begin() + e);
+						break;
+					}
+				}
+				heldEmitter.x = x;
+				heldEmitter.y = y;
+				lightEmitters.push_back(heldEmitter);
+				cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
+			}
+			else if (command == "undo")
+			{
+				lightEmitters.pop_back();
+			}
+			else if (command == "clear")
+			{
+				lightEmitters.clear();
+			}
+			cmdString = "";
+		}
+		else
+		{
+			
 		}
 
 		for (int i = 0; i < 10; i++)
 		{
-		Universe.lightMatrixBase[400][400].addData(96.0f, { 1.0F,0.0F,1.0F,1.0F,0.0F }, 32.0f);
-		Universe.lightMatrixBase[400][300].addData(96.0f, { 0.0F,1.0F,1.0F,1.0F,0.0F }, 32.0f);
-		Universe.lightMatrixBase[100][100].addData(160.0f, { 1.0F,1.0F,1.0F,1.0F,1.0F }, 32.0f);
-		Universe.lightMatrixBase[150][110].addData(64.0f, { 0.0F,0.0F,1.0F,0.0F,0.0F }, 64.0f);
+			for (int e = 0; e < lightEmitters.size(); e++)
+			{
+				lightEmitters[e].emit();
+			}
 	
 			for (int x = 0; x < xSize; x++)
 			{
@@ -100,6 +155,9 @@ int main(int, char**)
 			}
 			Universe.lightMatrixBase.swap(Universe.lightMatrixSuper);
 		}
+		
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+		SDL_RenderClear(renderer);
 		for (int x = 0; x < xSize; x++)
 		{
 			for (int y = 0; y < ySize; y++)

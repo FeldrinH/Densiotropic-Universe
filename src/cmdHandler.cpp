@@ -1,14 +1,14 @@
 #include <iostream>
-#include <string>
-#include <chrono>
-#include <thread>
 #include "cmdHandler.h"
+#include "Main.h"
 
-void getCmdIn(std::string &inString, const bool &isRunning)
+void getCmdIn()
 {
+	string cacheString;
 	while (true)
 	{
-		std::getline(std::cin, inString);
+		std::getline(std::cin, cacheString);
+		cmdString = cacheString;
 		//std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }
