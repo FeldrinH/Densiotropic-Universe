@@ -10,7 +10,7 @@
 
 //unsigned int fp_control_state = _controlfp(_EM_INEXACT, _MCW_EM);
 
-#define VERSION_NAME "Densiotropic Universe 0.2"
+#define VERSION_NAME "Densiotropic Universe 0.2.2"
 
 using namespace std;
 
@@ -108,7 +108,7 @@ int main(int, char**)
 				float lightDensity;
 				array<float, 5> diffuseRatio;
 				bool phase;
-				cmdIn >> lightDensity >> diffuseRatio[Up] >> diffuseRatio[Down] >> diffuseRatio[Left] >> diffuseRatio[Right] >> diffuseRatio[Middle];
+				cmdIn >> lightDensity >> diffuseRatio[Up] >> diffuseRatio[Down] >> diffuseRatio[Right] >> diffuseRatio[Left] >> diffuseRatio[Middle];
 				if (cmdIn >> phase)
 				{
 					cout << "Phase" << endl;

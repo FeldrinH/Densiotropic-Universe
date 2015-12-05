@@ -5,7 +5,7 @@
 
 using namespace std;
 
-enum Direction {Up,Down,Left,Right, Middle};
+enum Direction {Up,Down,Right,Left, Middle};
 
 class LightCell
 {
