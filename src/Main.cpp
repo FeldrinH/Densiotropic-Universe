@@ -119,10 +119,14 @@ int main(int, char**)
 					heldEmitter = LightEmitter(lightDensity, diffuseRatio);
 				}
 
-				cout << "Emitter set: " << lightDensity;
+				cout << "Density: " << lightDensity << "  Ratio:";
 				for (int i = 0; i < 5; i++)
 				{
 					cout << " " << heldEmitter.diffuseRatio[i];
+				}
+				if (!heldEmitter.fullPhase)
+				{
+					cout << "  Phase: " << heldEmitter.phase;
 				}
 				cout << endl;
 			}
@@ -142,7 +146,7 @@ int main(int, char**)
 				heldEmitter.y = y;
 				lightEmitters.push_back(heldEmitter);
 				lightEmitters.back().phase = lightEmitters.back().phase ^ ((x % 2) == (y % 2));
-				cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << " " << heldEmitter.phase << " " << lightEmitters.back().phase << endl;
+				cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y /*<< " " << lightEmitters.back().phase*/ << endl;
 			}
 			else if (command == "undo")
 			{
