@@ -1,6 +1,23 @@
 #include "LightEmitter.h"
 
-LightEmitter::LightEmitter(float dens, array<float, 5> ratio)
+LightEmitter::LightEmitter(float dens, array<float, 5> ratio) : lightDensity(dens), fullPhase(true), phase(false)
+{
+	float ratioMult = 0;
+
+	for (int a = 0; a < 5; a++)
+	{
+		ratioMult += ratio[a];
+	}
+	ratioMult = 1 / ratioMult;
+	for (int a = 0; a < 5; a++)
+	{
+		ratio[a] = ratio[a] * ratioMult * dens;
+	}
+	
+	diffuseRatio = ratio;
+}
+
+LightEmitter::LightEmitter(float dens, array<float, 5> ratio, bool phase) : lightDensity(dens), fullPhase(false), phase(phase)
 {
 	float ratioMult = 0;
 
@@ -14,6 +31,13 @@ LightEmitter::LightEmitter(float dens, array<float, 5> ratio)
 		ratio[a] = ratio[a] * ratioMult * dens;
 	}
 
-	lightDensity = dens;
 	diffuseRatio = ratio;
+}
+
+void LightEmitter::emit(bool curPhase)
+{
+	if (fullPhase || phase == curPhase)
+	{
+		Universe.lightMatrixBase[x][y].addData(lightDensity, diffuseRatio, 1.0f);
+	}
 }

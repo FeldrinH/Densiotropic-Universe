@@ -53,6 +53,7 @@ int main(int, char**)
 	LightEmitter heldEmitter(0.0f, {0.0f,0.0f,0.0f,0.0f,0.0f});
 
 	int speed = 10;
+	bool curPhase = true;
 
 	while (isRunning)
 	{
@@ -92,7 +93,8 @@ int main(int, char**)
 					heldEmitter.x = mainEvent.button.x;
 					heldEmitter.y = mainEvent.button.y;
 					lightEmitters.push_back(heldEmitter);
-					cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
+					lightEmitters.back().phase = lightEmitters.back().phase ^ ((mainEvent.button.x % 2) == (mainEvent.button.y % 2));
+					cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << " " << heldEmitter.phase << " " << lightEmitters.back().phase << endl;
 				}
 			}
 		}
@@ -105,9 +107,24 @@ int main(int, char**)
 			{
 				float lightDensity;
 				array<float, 5> diffuseRatio;
+				bool phase;
 				cmdIn >> lightDensity >> diffuseRatio[Up] >> diffuseRatio[Down] >> diffuseRatio[Left] >> diffuseRatio[Right] >> diffuseRatio[Middle];
-				heldEmitter = LightEmitter(lightDensity, diffuseRatio);
-				cout << "Emitter set: " << lightDensity << endl;
+				if (cmdIn >> phase)
+				{
+					cout << "Phase" << endl;
+					heldEmitter = LightEmitter(lightDensity, diffuseRatio, phase);
+				}
+				else 
+				{
+					heldEmitter = LightEmitter(lightDensity, diffuseRatio);
+				}
+
+				cout << "Emitter set: " << lightDensity;
+				for (int i = 0; i < 5; i++)
+				{
+					cout << " " << heldEmitter.diffuseRatio[i];
+				}
+				cout << endl;
 			}
 			else if (command == "emplace" && heldEmitter.lightDensity != 0.0f)
 			{
@@ -124,7 +141,8 @@ int main(int, char**)
 				heldEmitter.x = x;
 				heldEmitter.y = y;
 				lightEmitters.push_back(heldEmitter);
-				cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
+				lightEmitters.back().phase = lightEmitters.back().phase ^ ((x % 2) == (y % 2));
+				cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << " " << heldEmitter.phase << " " << lightEmitters.back().phase << endl;
 			}
 			else if (command == "undo")
 			{
@@ -157,7 +175,7 @@ int main(int, char**)
 		{
 			for (int e = 0; e < lightEmitters.size(); e++)
 			{
-				lightEmitters[e].emit();
+				lightEmitters[e].emit(curPhase);
 			}
 	
 			for (int x = 0; x < xSize; x++)
@@ -168,8 +186,9 @@ int main(int, char**)
 				}
 			}
 			Universe.lightMatrixBase.swap(Universe.lightMatrixSuper);
+			curPhase = !curPhase;
 		}
-		
+
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		SDL_RenderClear(renderer);
 		for (int x = 0; x < xSize; x++)

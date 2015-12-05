@@ -7,15 +7,15 @@ class LightEmitter
 {
 public:
 	LightEmitter(float dens, array<float, 5> ratio);
+	LightEmitter(float dens, array<float, 5> ratio, bool phase);
 
 	int x, y;
 	float lightDensity;
 	float lightMult;
 	array<float, 5> diffuseRatio;
+	bool fullPhase;
+	bool phase;
 
-	void emit()
-	{
-		Universe.lightMatrixBase[x][y].addData(lightDensity, diffuseRatio, 1.0f);
-	}
+	void emit(bool curPhase);
 };
 
