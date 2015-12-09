@@ -22,7 +22,6 @@ public:
 	inline static int getXDir(int dir);
 	inline static int getYDir(int dir);
 	
-
 	void draw(int x, int y);
 };
 

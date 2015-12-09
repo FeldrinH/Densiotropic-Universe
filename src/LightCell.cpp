@@ -66,12 +66,12 @@ void LightCell::addData(float dens, array<float, 5> ratio, float mult)
 	for (int i = 0; i < 5; i++)
 	{
 		diffuseRatio[i] += ratio[i] * mult;
-		if (diffuseRatio[i] != diffuseRatio[i])
+		/*if (diffuseRatio[i] != diffuseRatio[i])
 		{
 			lightDensity = 0.0f;
 			diffuseRatio.fill(0.0F);
 			cout << "NaN in addData()" << endl;
-		}
+		}*/
 	}
 }
 
