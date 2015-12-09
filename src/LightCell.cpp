@@ -44,11 +44,7 @@ void LightCell::diffuse(int x, int y)
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderDrawPoint(renderer, x, y);
 	}*/
-	if (lightDensity < 0.015625f)
-	{
-		return;
-	}
-
+	
 	float ratioMult = 1 / lightDensity;
 
 

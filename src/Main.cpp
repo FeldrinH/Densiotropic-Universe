@@ -186,7 +186,10 @@ int main(int, char**)
 			{
 				for (int y = 0; y < ySize; y++)
 				{
-					Universe.lightMatrixBase[x][y].diffuse(x, y);
+					if (Universe.lightMatrixBase[x][y].lightDensity >= 0.015625f)
+					{
+						Universe.lightMatrixBase[x][y].diffuse(x, y);
+					}
 				}
 			}
 			Universe.lightMatrixBase.swap(Universe.lightMatrixSuper);
