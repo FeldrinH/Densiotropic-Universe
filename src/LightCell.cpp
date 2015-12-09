@@ -47,12 +47,21 @@ void LightCell::diffuse(int x, int y)
 	
 	float ratioMult = 1 / lightDensity;
 
-
-	for (int i = 0; i < 5; i++)
+	if (x > 0 && x < Universe.x - 1 && y > 0 && y < Universe.y - 1)
 	{
-		if (x + getXDir(i) > -1 && x + getXDir(i) < Universe.x && y + getYDir(i) > -1 && y + getYDir(i) < Universe.y)
+		for (int i = 0; i < 5; i++)
 		{
 			Universe.lightMatrixSuper[x + getXDir(i)][y + getYDir(i)].addData(diffuseRatio[i], diffuseRatio, diffuseRatio[i] * ratioMult);
+		}
+	}
+	else
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			if (x + getXDir(i) > -1 && x + getXDir(i) < Universe.x && y + getYDir(i) > -1 && y + getYDir(i) < Universe.y)
+			{
+				Universe.lightMatrixSuper[x + getXDir(i)][y + getYDir(i)].addData(diffuseRatio[i], diffuseRatio, diffuseRatio[i] * ratioMult);
+			}
 		}
 	}
 
