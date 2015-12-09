@@ -34,7 +34,7 @@ LightCell::~LightCell()
 {
 }
 
-void LightCell::diffuse(int x, int y)
+inline void LightCell::diffuse(int x, int y)
 {
 	/*if (lightDensity != lightDensity)
 	{
@@ -60,7 +60,7 @@ void LightCell::diffuse(int x, int y)
 	diffuseRatio.fill(0.0F);
 }
 
-void LightCell::addData(float dens, array<float, 5> ratio, float mult)
+inline void LightCell::addData(float dens, array<float, 5> ratio, float mult)
 {
 	lightDensity += dens;
 	for (int i = 0; i < 5; i++)
@@ -75,12 +75,12 @@ void LightCell::addData(float dens, array<float, 5> ratio, float mult)
 	}
 }
 
-int LightCell::getXDir(int dir)
+inline int LightCell::getXDir(int dir)
 {
 	return dir == Left ? -1 : dir == Right ? 1 : 0;
 }
 
-int LightCell::getYDir(int dir)
+inline int LightCell::getYDir(int dir)
 {
 	return dir == Up ? -1 : dir == Down ? 1 : 0;
 }
