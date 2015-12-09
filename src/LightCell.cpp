@@ -34,7 +34,7 @@ LightCell::~LightCell()
 {
 }
 
-inline void LightCell::diffuse(int x, int y)
+void LightCell::diffuse(int x, int y)
 {
 	/*if (lightDensity != lightDensity)
 	{
@@ -60,7 +60,7 @@ inline void LightCell::diffuse(int x, int y)
 	diffuseRatio.fill(0.0F);
 }
 
-inline void LightCell::addData(float dens, array<float, 5> ratio, float mult)
+void LightCell::addData(float dens, array<float, 5> ratio, float mult)
 {
 	lightDensity += dens;
 	for (int i = 0; i < 5; i++)
