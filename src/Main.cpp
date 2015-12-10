@@ -10,7 +10,7 @@
 
 //unsigned int fp_control_state = _controlfp(_EM_INEXACT, _MCW_EM);
 
-#define VERSION_NAME "Densiotropic Universe 0.2.2"
+#define VERSION_NAME "Densiotropic Universe 0.2.3"
 
 using namespace std;
 
@@ -202,7 +202,10 @@ int main(int, char**)
 		{
 			for (int y = 0; y < ySize; y++)
 			{
-				Universe.lightMatrixBase[x][y].draw(x,y);
+				if (Universe.lightMatrixBase[x][y].lightDensity > 0.75F)
+				{
+					Universe.lightMatrixBase[x][y].draw(x, y);
+				}
 			}
 		}
 

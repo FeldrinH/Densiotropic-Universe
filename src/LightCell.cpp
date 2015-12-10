@@ -96,16 +96,13 @@ inline int LightCell::getYDir(int dir)
 
 void LightCell::draw(int x, int y)
 {
-	if (lightDensity > 0.5F)
+	if (lightDensity > 255.0F)
 	{
-		if (lightDensity > 255.0F)
-		{
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-		}
-		else
-		{
-			SDL_SetRenderDrawColor(renderer, lightDensity, lightDensity, lightDensity, 255);
-		}
-		SDL_RenderDrawPoint(renderer, x, y);
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	}
+	else
+	{
+		SDL_SetRenderDrawColor(renderer, lightDensity, lightDensity, lightDensity, 255);
+	}
+	SDL_RenderDrawPoint(renderer, x, y);
 }
