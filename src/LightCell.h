@@ -21,7 +21,5 @@ public:
 	void addData(float dens, array<float, 5> ratio, float mult);
 	inline static int getXDir(int dir);
 	inline static int getYDir(int dir);
-	
-	void draw(int x, int y);
 };
 

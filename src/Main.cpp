@@ -42,7 +42,9 @@ int main(int, char**)
 	}
 
 	SDL_Window* window = SDL_CreateWindow(VERSION_NAME, 20, 50, xSize, ySize, SDL_WINDOW_SHOWN | SDL_WINDOW_MOUSE_FOCUS);
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+	Uint32* pixels = new Uint32[xSize*ySize];
+	SDL_Texture* renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, xSize, ySize);
 	SDL_Event mainEvent;
 
 	thread inputHandler(getCmdIn);
@@ -57,7 +59,8 @@ int main(int, char**)
 
 	while (isRunning)
 	{
-		//cout << cmdString << endl;
+		//EVENT HANDLING
+
 		while (SDL_PollEvent(&mainEvent) != 0)
 		{
 			if (mainEvent.type == SDL_QUIT)
@@ -170,10 +173,9 @@ int main(int, char**)
 			}
 			cmdString = "";
 		}
-		else
-		{
-			
-		}
+
+
+		//PROCESSING
 
 		for (int i = 0; i < speed; i++)
 		{
@@ -186,7 +188,7 @@ int main(int, char**)
 			{
 				for (int y = 0; y < ySize; y++)
 				{
-					if (Universe.lightMatrixBase[x][y].lightDensity >= 0.015625f)
+					if (Universe.lightMatrixBase[x][y].lightDensity >= 0.00390625f)
 					{
 						Universe.lightMatrixBase[x][y].diffuse(x, y);
 					}
@@ -196,22 +198,31 @@ int main(int, char**)
 			curPhase = !curPhase;
 		}
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-		SDL_RenderClear(renderer);
+		
+		//DRAWING
+
+		memset(pixels, 0, xSize * ySize * sizeof(Uint32));
+		Uint8 cacheDensity;
 		for (int x = 0; x < xSize; x++)
 		{
 			for (int y = 0; y < ySize; y++)
 			{
 				if (Universe.lightMatrixBase[x][y].lightDensity > 0.75F)
 				{
-					Universe.lightMatrixBase[x][y].draw(x, y);
+					cacheDensity = Universe.lightMatrixBase[x][y].lightDensity >= 255.0F ? 255 : (Uint8)Universe.lightMatrixBase[x][y].lightDensity;
+					pixels[y * xSize + x] = cacheDensity | cacheDensity << 8 | cacheDensity << 16;
 				}
 			}
 		}
-
+		
+		//SDL_RenderClear(renderer);
+		SDL_UpdateTexture(renderTexture, NULL, pixels, xSize * sizeof(Uint32));
+		SDL_RenderCopy(renderer, renderTexture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 	}
 
+	delete[] pixels;
+	SDL_DestroyTexture(renderTexture);
 	SDL_Quit();
 	exit(0);
 	return 0;
