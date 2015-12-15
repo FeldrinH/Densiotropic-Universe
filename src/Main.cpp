@@ -158,6 +158,15 @@ int main(int, char**)
 					lightEmitters.pop_back();
 				}
 			}
+			else if (command == "remove")
+			{
+				int removeNum;
+				cmdIn >> removeNum;
+				if (removeNum < lightEmitters.size())
+				{
+					lightEmitters.erase(lightEmitters.begin()+removeNum);
+				}
+			}
 			else if (command == "clear")
 			{
 				lightEmitters.clear();
