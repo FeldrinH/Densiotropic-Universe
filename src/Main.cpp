@@ -10,7 +10,7 @@
 
 //unsigned int fp_control_state = _controlfp(_EM_INEXACT, _MCW_EM);
 
-#define VERSION_NAME "Densiotropic Universe 0.2.3"
+#define VERSION_NAME "Densiotropic Universe 0.2.4"
 
 using namespace std;
 
@@ -83,21 +83,25 @@ int main(int, char**)
 					}
 					cout << endl;
 				}
-				else if (mainEvent.button.button == SDL_BUTTON_RIGHT && heldEmitter.lightDensity != 0.0f)
+				else if (mainEvent.button.button == SDL_BUTTON_RIGHT)
 				{
 					for (int e = 0; e < lightEmitters.size(); e++)
 					{
-						if (lightEmitters[e].x == mainEvent.button.x && lightEmitters[e].x == mainEvent.button.y)
+						if (lightEmitters[e].x == mainEvent.button.x && lightEmitters[e].y == mainEvent.button.y)
 						{
 							lightEmitters.erase(lightEmitters.begin() + e);
+							cout << "Removed emitter: " << mainEvent.button.x << "," << mainEvent.button.y << endl;
 							break;
 						}
 					}
-					heldEmitter.x = mainEvent.button.x;
-					heldEmitter.y = mainEvent.button.y;
-					lightEmitters.push_back(heldEmitter);
-					lightEmitters.back().phase = lightEmitters.back().phase ^ ((mainEvent.button.x % 2) == (mainEvent.button.y % 2));
-					cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << " " << heldEmitter.phase << " " << lightEmitters.back().phase << endl;
+					if (heldEmitter.lightDensity != 0.0f)
+					{
+						heldEmitter.x = mainEvent.button.x;
+						heldEmitter.y = mainEvent.button.y;
+						lightEmitters.push_back(heldEmitter);
+						lightEmitters.back().phase = lightEmitters.back().phase ^ ((mainEvent.button.x % 2) == (mainEvent.button.y % 2));
+						cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
+					}
 				}
 			}
 		}
@@ -114,7 +118,6 @@ int main(int, char**)
 				cmdIn >> lightDensity >> diffuseRatio[Up] >> diffuseRatio[Down] >> diffuseRatio[Right] >> diffuseRatio[Left] >> diffuseRatio[Middle];
 				if (cmdIn >> phase)
 				{
-					cout << "Phase" << endl;
 					heldEmitter = LightEmitter(lightDensity, diffuseRatio, phase);
 				}
 				else 
@@ -133,23 +136,27 @@ int main(int, char**)
 				}
 				cout << endl;
 			}
-			else if (command == "emplace" && heldEmitter.lightDensity != 0.0f)
+			else if (command == "emplace")
 			{
 				int x, y;
 				cmdIn >> x >> y;
 				for (int e = 0; e < lightEmitters.size(); e++)
 				{
-					if (lightEmitters[e].x == x && lightEmitters[e].x == y)
+					if (lightEmitters[e].x == x && lightEmitters[e].y == y)
 					{
 						lightEmitters.erase(lightEmitters.begin() + e);
+						cout << "Removed emitter: " << x << "," << y << endl;
 						break;
 					}
 				}
-				heldEmitter.x = x;
-				heldEmitter.y = y;
-				lightEmitters.push_back(heldEmitter);
-				lightEmitters.back().phase = lightEmitters.back().phase ^ ((x % 2) == (y % 2));
-				cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y /*<< " " << lightEmitters.back().phase*/ << endl;
+				if (heldEmitter.lightDensity != 0.0f)
+				{
+					heldEmitter.x = x;
+					heldEmitter.y = y;
+					lightEmitters.push_back(heldEmitter);
+					lightEmitters.back().phase = lightEmitters.back().phase ^ ((x % 2) == (y % 2));
+					cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
+				}
 			}
 			else if (command == "undo")
 			{
