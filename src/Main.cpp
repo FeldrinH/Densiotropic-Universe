@@ -208,6 +208,11 @@ int main(int, char**)
 					{
 						Universe.lightMatrixBase[x][y].diffuse(x, y);
 					}
+					else if (Universe.lightMatrixBase[x][y].lightDensity != 0.0f)
+					{
+						Universe.lightMatrixBase[x][y].lightDensity = 0.0f;
+						Universe.lightMatrixBase[x][y].diffuseRatio = { 0.0f,0.0f,0.0f,0.0f,0.0f };
+					}
 				}
 			}
 			Universe.lightMatrixBase.swap(Universe.lightMatrixSuper);
@@ -228,6 +233,10 @@ int main(int, char**)
 					cacheDensity = Universe.lightMatrixBase[x][y].lightDensity >= 255.0F ? 255 : (Uint8)Universe.lightMatrixBase[x][y].lightDensity;
 					pixels[y * xSize + x] = cacheDensity | cacheDensity << 8 | cacheDensity << 16;
 				}
+				/*else
+				{
+					pixels[y * xSize + x] = 255;
+ 				}*/
 			}
 		}
 		
