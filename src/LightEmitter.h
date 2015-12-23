@@ -15,6 +15,7 @@ public:
 	array<float, 5> diffuseRatio;
 	bool fullPhase;
 	bool phase;
+	bool originalPhase;
 
 	void emit(bool curPhase);
 };

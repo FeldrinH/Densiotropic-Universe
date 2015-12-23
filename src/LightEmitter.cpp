@@ -1,6 +1,6 @@
 #include "LightEmitter.h"
 
-LightEmitter::LightEmitter(float dens, array<float, 5> ratio) : lightDensity(dens), fullPhase(true), phase(false)
+LightEmitter::LightEmitter(float dens, array<float, 5> ratio) : lightDensity(dens), fullPhase(true), phase(false), originalPhase(false)
 {
 	float ratioMult = 0;
 
@@ -17,7 +17,7 @@ LightEmitter::LightEmitter(float dens, array<float, 5> ratio) : lightDensity(den
 	diffuseRatio = ratio;
 }
 
-LightEmitter::LightEmitter(float dens, array<float, 5> ratio, bool phase) : lightDensity(dens), fullPhase(false), phase(phase)
+LightEmitter::LightEmitter(float dens, array<float, 5> ratio, bool phase) : lightDensity(dens), fullPhase(false), phase(phase), originalPhase(phase)
 {
 	float ratioMult = 0;
 

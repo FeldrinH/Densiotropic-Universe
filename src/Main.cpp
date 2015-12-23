@@ -63,6 +63,7 @@ int main(int, char**)
 
 	int speed = 10;
 	bool curPhase = true;
+	bool emitHand = false;
 
 	while (isRunning)
 	{
@@ -75,15 +76,15 @@ int main(int, char**)
 				cout << "Deuniversifying..." << endl;
 				isRunning = false;
 			}
-			if (mainEvent.type == SDL_KEYDOWN)
+			else if (mainEvent.type == SDL_KEYDOWN)
 			{
 
 			}
-			if (mainEvent.type == SDL_MOUSEBUTTONDOWN)
+			else if (mainEvent.type == SDL_MOUSEBUTTONDOWN)
 			{
 				if (mainEvent.button.button == SDL_BUTTON_LEFT)
 				{
-
+					emitHand = true;
 				}
 				else if (mainEvent.button.button == SDL_BUTTON_RIGHT)
 				{
@@ -98,10 +99,10 @@ int main(int, char**)
 					}
 					if (heldEmitter.lightDensity != 0.0f)
 					{
-						heldEmitter.x = mainEvent.button.x;
-						heldEmitter.y = mainEvent.button.y;
 						lightEmitters.push_back(heldEmitter);
-						lightEmitters.back().phase = lightEmitters.back().phase ^ ((mainEvent.button.x % 2) == (mainEvent.button.y % 2));
+						lightEmitters.back().x = mainEvent.button.x;
+						lightEmitters.back().y = mainEvent.button.y;
+						lightEmitters.back().phase = lightEmitters.back().originalPhase ^ ((mainEvent.button.x % 2) == (mainEvent.button.y % 2));
 						cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
 					}
 				}
@@ -115,7 +116,12 @@ int main(int, char**)
 					cout << endl;
 				}
 			}
+			else if (mainEvent.type == SDL_MOUSEBUTTONUP && mainEvent.button.button == SDL_BUTTON_LEFT)
+			{
+				emitHand = false;
+			}
 		}
+
 		if (cmdString != "")
 		{
 			istringstream cmdIn(cmdString);
@@ -165,7 +171,7 @@ int main(int, char**)
 					heldEmitter.x = x;
 					heldEmitter.y = y;
 					lightEmitters.push_back(heldEmitter);
-					lightEmitters.back().phase = lightEmitters.back().phase ^ ((x % 2) == (y % 2));
+					lightEmitters.back().phase = lightEmitters.back().originalPhase ^ ((x % 2) == (y % 2));
 					cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
 				}
 			}
@@ -204,8 +210,18 @@ int main(int, char**)
 
 		//PROCESSING
 
+		if (emitHand)
+		{
+			SDL_GetMouseState(&heldEmitter.x, &heldEmitter.y);
+			heldEmitter.phase = heldEmitter.originalPhase ^ ((heldEmitter.x % 2) == (heldEmitter.y % 2));
+		}
+
 		for (int i = 0; i < speed; i++)
 		{
+			if (emitHand && heldEmitter.lightDensity != 0.0f)
+			{
+				heldEmitter.emit(curPhase);
+			}
 			for (int e = 0; e < lightEmitters.size(); e++)
 			{
 				lightEmitters[e].emit(curPhase);
