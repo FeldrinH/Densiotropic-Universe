@@ -103,7 +103,7 @@ int main(int, char**)
 						lightEmitters.back().x = mainEvent.button.x;
 						lightEmitters.back().y = mainEvent.button.y;
 						lightEmitters.back().phase = lightEmitters.back().originalPhase ^ ((mainEvent.button.x % 2) == (mainEvent.button.y % 2));
-						cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
+						cout << "Placed emitter: " << lightEmitters.back().x << "," << lightEmitters.back().y << endl;
 					}
 				}
 				else if (mainEvent.button.button == SDL_BUTTON_MIDDLE)
@@ -168,11 +168,11 @@ int main(int, char**)
 				}
 				if (heldEmitter.lightDensity != 0.0f)
 				{
-					heldEmitter.x = x;
-					heldEmitter.y = y;
 					lightEmitters.push_back(heldEmitter);
+					lightEmitters.back().x = x;
+					lightEmitters.back().y = y;
 					lightEmitters.back().phase = lightEmitters.back().originalPhase ^ ((x % 2) == (y % 2));
-					cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
+					cout << "Placed emitter: " << lightEmitters.back().x << "," << lightEmitters.back().y << endl;
 				}
 			}
 			else if (command == "undo")
