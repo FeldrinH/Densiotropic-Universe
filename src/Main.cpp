@@ -48,6 +48,13 @@ int main(int, char**)
 	SDL_Event mainEvent;
 
 	thread inputHandler(getCmdIn);
+	
+	int* pixel = new int(0x00FF0000);
+	SDL_Surface* cursorSurface = SDL_CreateRGBSurfaceFrom(pixel, 1, 1, 24, 1, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+	SDL_Cursor* cursor = SDL_CreateColorCursor(cursorSurface,0,0);
+	SDL_SetCursor(cursor);
+	SDL_FreeSurface(cursorSurface);
+	delete pixel;
 
 	Universe = UniverseChunk(xSize,ySize);
 	vector<LightEmitter> lightEmitters;
@@ -248,6 +255,7 @@ int main(int, char**)
 
 	delete[] pixels;
 	SDL_DestroyTexture(renderTexture);
+	SDL_FreeCursor(cursor);
 	SDL_Quit();
 	exit(0);
 	return 0;
