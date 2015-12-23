@@ -10,7 +10,7 @@
 
 //unsigned int fp_control_state = _controlfp(_EM_INEXACT, _MCW_EM);
 
-#define VERSION_NAME "Densiotropic Universe 0.2.4"
+#define VERSION_NAME "Densiotropic Universe 0.1.4"
 
 using namespace std;
 
@@ -83,12 +83,7 @@ int main(int, char**)
 			{
 				if (mainEvent.button.button == SDL_BUTTON_LEFT)
 				{
-					cout << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].lightDensity;
-					for (int i = 0; i < 5; i++)
-					{
-						cout << " " << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].diffuseRatio[i];
-					}
-					cout << endl;
+
 				}
 				else if (mainEvent.button.button == SDL_BUTTON_RIGHT)
 				{
@@ -109,6 +104,15 @@ int main(int, char**)
 						lightEmitters.back().phase = lightEmitters.back().phase ^ ((mainEvent.button.x % 2) == (mainEvent.button.y % 2));
 						cout << "Placed emitter: " << heldEmitter.x << "," << heldEmitter.y << endl;
 					}
+				}
+				else if (mainEvent.button.button == SDL_BUTTON_MIDDLE)
+				{
+					cout << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].lightDensity;
+					for (int i = 0; i < 5; i++)
+					{
+						cout << " " << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].diffuseRatio[i];
+					}
+					cout << endl;
 				}
 			}
 		}
