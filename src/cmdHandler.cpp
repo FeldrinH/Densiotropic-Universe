@@ -8,7 +8,7 @@ void getCmdIn()
 	while (true)
 	{
 		std::getline(std::cin, cacheString);
-		cmdString = cacheString;
+		cmdQueue.push(cacheString);
 		//std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
 }

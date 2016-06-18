@@ -1,0 +1,8 @@
+emitter 256 1 0 0 0
+emplace 528 572
+emitter 256 0 1 0 0
+emplace 170 50
+emitter 256 0 0 1 0
+emplace 27 137
+emitter 256 0 0 0 1
+emplace 632 83

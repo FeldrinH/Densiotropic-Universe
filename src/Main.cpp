@@ -3,6 +3,7 @@
 #include <thread>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include "UniverseChunk.h"
 #include "Main.h"
 #include "LightEmitter.h"
@@ -16,11 +17,11 @@ using namespace std;
 
 UniverseChunk Universe;
 SDL_Renderer* renderer;
-string cmdString = "12";
+concurrency::concurrent_queue<string> cmdQueue;
 
-int main(int, char**) 
+int main(int, char**)
 {
-	
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
 		cout << "SDL_Init Error: " << SDL_GetError() << endl;
@@ -48,22 +49,24 @@ int main(int, char**)
 	SDL_Event mainEvent;
 
 	thread inputHandler(getCmdIn);
-	
+
 	int* pixel = new int(0x00FF0000);
 	SDL_Surface* cursorSurface = SDL_CreateRGBSurfaceFrom(pixel, 1, 1, 24, 1, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-	SDL_Cursor* cursor = SDL_CreateColorCursor(cursorSurface,0,0);
+	SDL_Cursor* cursor = SDL_CreateColorCursor(cursorSurface, 0, 0);
 	SDL_SetCursor(cursor);
 	SDL_FreeSurface(cursorSurface);
 	delete pixel;
 
-	Universe = UniverseChunk(xSize,ySize);
+	Universe = UniverseChunk(xSize, ySize);
 	vector<LightEmitter> lightEmitters;
-	
-	LightEmitter heldEmitter(0.0f, {0.0f,0.0f,0.0f,0.0f,0.0f});
+
+	LightEmitter heldEmitter(0.0f, { 0.0f,0.0f,0.0f,0.0f,0.0f });
 
 	int speed = 10;
 	bool curPhase = true;
 	bool emitHand = false;
+
+	string cmdCache;
 
 	while (isRunning)
 	{
@@ -122,9 +125,9 @@ int main(int, char**)
 			}
 		}
 
-		if (cmdString != "")
+		if (cmdQueue.try_pop(cmdCache))
 		{
-			istringstream cmdIn(cmdString);
+			istringstream cmdIn(cmdCache);
 			string command;
 			cmdIn >> command;
 			if (command == "emitter")
@@ -137,7 +140,7 @@ int main(int, char**)
 				{
 					heldEmitter = LightEmitter(lightDensity, diffuseRatio, phase);
 				}
-				else 
+				else
 				{
 					heldEmitter = LightEmitter(lightDensity, diffuseRatio);
 				}
@@ -188,7 +191,7 @@ int main(int, char**)
 				cmdIn >> removeNum;
 				if (removeNum < lightEmitters.size())
 				{
-					lightEmitters.erase(lightEmitters.begin()+removeNum);
+					lightEmitters.erase(lightEmitters.begin() + removeNum);
 				}
 			}
 			else if (command == "clear")
@@ -204,7 +207,46 @@ int main(int, char**)
 				cmdIn >> speed;
 				cout << "Set speed: " << speed << endl;
 			}
-			cmdString = "";
+			else if (command == "load")
+			{
+				string fileName;
+				cmdIn >> fileName;
+
+				string newCmd;
+				ifstream loadFile(fileName);
+				while (getline(loadFile, newCmd))
+				{
+					cmdQueue.push(newCmd);
+				}
+
+				cout << "Emitters loaded from: " << fileName << endl;
+			}
+			else if (command == "save")
+			{
+				string fileName;
+				cmdIn >> fileName;
+
+				ofstream saveFile;
+				saveFile.open(fileName, ofstream::trunc);
+				for (int e = 0; e < lightEmitters.size(); e++)
+				{
+					LightEmitter em = lightEmitters[e];
+					saveFile << "emitter " << em.lightDensity;
+					for (int i = 0; i < 5; i++)
+					{
+						saveFile << " " << em.diffuseRatio[i];
+					}
+					if (!em.fullPhase)
+					{
+						saveFile << " " << em.originalPhase;
+					}
+					saveFile << endl;
+					saveFile << "emplace " << em.x << " " << em.y << endl;
+				}
+				saveFile.close();
+
+				cout << "Emitters saved as: " << fileName << endl;
+			}
 		}
 
 
@@ -226,7 +268,7 @@ int main(int, char**)
 			{
 				lightEmitters[e].emit(curPhase);
 			}
-	
+
 			for (int x = 0; x < xSize; x++)
 			{
 				for (int y = 0; y < ySize; y++)
@@ -246,7 +288,7 @@ int main(int, char**)
 			curPhase = !curPhase;
 		}
 
-		
+
 		//DRAWING
 
 		memset(pixels, 0, xSize * ySize * sizeof(Uint32));
@@ -263,10 +305,10 @@ int main(int, char**)
 				/*else
 				{
 					pixels[y * xSize + x] = 255;
- 				}*/
+				}*/
 			}
 		}
-		
+
 		//SDL_RenderClear(renderer);
 		SDL_UpdateTexture(renderTexture, NULL, pixels, xSize * sizeof(Uint32));
 		SDL_RenderCopy(renderer, renderTexture, NULL, NULL);
