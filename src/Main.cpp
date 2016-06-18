@@ -11,7 +11,7 @@
 
 //unsigned int fp_control_state = _controlfp(_EM_INEXACT, _MCW_EM);
 
-#define VERSION_NAME "Densiotropic Universe 0.1.4"
+#define VERSION_NAME "Densiotropic Universe 0.1.5"
 
 using namespace std;
 
