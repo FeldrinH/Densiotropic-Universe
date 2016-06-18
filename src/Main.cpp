@@ -33,7 +33,6 @@ int main(int, char**)
 	string size = "";
 	getline(cin, size);
 	int xSize, ySize = 0;
-
 	istringstream s(size);
 	s >> xSize >> ySize;
 	if (xSize == 0 || ySize == 0)
@@ -41,6 +40,8 @@ int main(int, char**)
 		xSize = 640;
 		ySize = 640;
 	}
+	int xMax = xSize + 1;
+	int yMax = ySize + 1;
 
 	SDL_Window* window = SDL_CreateWindow(VERSION_NAME, 20, 50, xSize, ySize, SDL_WINDOW_SHOWN | SDL_WINDOW_MOUSE_FOCUS);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
@@ -57,7 +58,7 @@ int main(int, char**)
 	SDL_FreeSurface(cursorSurface);
 	delete pixel;
 
-	Universe = UniverseChunk(xSize, ySize);
+	Universe = UniverseChunk(xSize + 2, ySize + 2);
 	vector<LightEmitter> lightEmitters;
 
 	LightEmitter heldEmitter(0.0f, { 0.0f,0.0f,0.0f,0.0f,0.0f });
@@ -200,7 +201,7 @@ int main(int, char**)
 			}
 			else if (command == "reset")
 			{
-				Universe = UniverseChunk(xSize, ySize);
+				Universe = UniverseChunk(xSize+2, ySize+2);
 			}
 			else if (command == "speed")
 			{
@@ -269,9 +270,9 @@ int main(int, char**)
 				lightEmitters[e].emit(curPhase);
 			}
 
-			for (int x = 0; x < xSize; x++)
+			for (int x = 1; x < xMax; x++)
 			{
-				for (int y = 0; y < ySize; y++)
+				for (int y = 1; y < yMax; y++)
 				{
 					if (Universe.lightMatrixBase[x][y].lightDensity >= 0.00390625f)
 					{
@@ -293,14 +294,14 @@ int main(int, char**)
 
 		memset(pixels, 0, xSize * ySize * sizeof(Uint32));
 		Uint8 cacheDensity;
-		for (int x = 0; x < xSize; x++)
+		for (int x = 1; x < xMax; x++)
 		{
-			for (int y = 0; y < ySize; y++)
+			for (int y = 1; y < yMax; y++)
 			{
-				if (Universe.lightMatrixBase[x][y].lightDensity > 0.75F)
+				//if (Universe.lightMatrixBase[x][y].lightDensity > 0.75F)
 				{
 					cacheDensity = Universe.lightMatrixBase[x][y].lightDensity >= 255.0F ? 255 : (Uint8)Universe.lightMatrixBase[x][y].lightDensity;
-					pixels[y * xSize + x] = cacheDensity | cacheDensity << 8 | cacheDensity << 16;
+					pixels[(y - 1) * xSize + x - 1] = cacheDensity | cacheDensity << 8 | cacheDensity << 16;
 				}
 				/*else
 				{

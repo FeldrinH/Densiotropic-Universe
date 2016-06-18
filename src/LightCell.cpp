@@ -46,30 +46,16 @@ void LightCell::diffuse(int x, int y)
 	}*/
 	
 	float ratioMult = 1 / lightDensity;
-
-	if (x > 0 && x < Universe.x - 1 && y > 0 && y < Universe.y - 1)
+	for (int i = 0; i < 5; i++)
 	{
-		for (int i = 0; i < 5; i++)
-		{
-			Universe.lightMatrixSuper[x + getXDir(i)][y + getYDir(i)].addData(diffuseRatio[i], diffuseRatio, diffuseRatio[i] * ratioMult);
-		}
-	}
-	else
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			if (x + getXDir(i) > -1 && x + getXDir(i) < Universe.x && y + getYDir(i) > -1 && y + getYDir(i) < Universe.y)
-			{
-				Universe.lightMatrixSuper[x + getXDir(i)][y + getYDir(i)].addData(diffuseRatio[i], diffuseRatio, diffuseRatio[i] * ratioMult);
-			}
-		}
+		Universe.lightMatrixSuper[x + dirX[i]][y + dirY[i]].addData(diffuseRatio[i], diffuseRatio, diffuseRatio[i] * ratioMult);
 	}
 
 	lightDensity = 0.0F;
 	diffuseRatio.fill(0.0F);
 }
 
-void LightCell::addData(float dens, array<float, 5> ratio, float mult)
+inline void LightCell::addData(float dens, array<float, 5> ratio, float mult)
 {
 	lightDensity += dens;
 	for (int i = 0; i < 5; i++)
@@ -84,15 +70,15 @@ void LightCell::addData(float dens, array<float, 5> ratio, float mult)
 	}
 }
 
-inline int LightCell::getXDir(int dir)
+/*__forceinline int LightCell::getXDir(int dir)
 {
 	return dir == Left ? -1 : dir == Right ? 1 : 0;
 }
 
-inline int LightCell::getYDir(int dir)
+__forceinline int LightCell::getYDir(int dir)
 {
 	return dir == Up ? -1 : dir == Down ? 1 : 0;
-}
+}*/
 
 /*void LightCell::draw(int x, int y)
 {
