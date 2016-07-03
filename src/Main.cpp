@@ -136,7 +136,7 @@ int main(int, char**)
 				float lightDensity;
 				array<float, 5> diffuseRatio;
 				bool phase;
-				cmdIn >> lightDensity >> diffuseRatio[Up] >> diffuseRatio[Down] >> diffuseRatio[Right] >> diffuseRatio[Left] >> diffuseRatio[Middle];
+				cmdIn >> lightDensity >> diffuseRatio[Up] >> diffuseRatio[Down] >> diffuseRatio[Left] >> diffuseRatio[Right] >> diffuseRatio[Middle];
 				if (cmdIn >> phase)
 				{
 					heldEmitter = LightEmitter(lightDensity, diffuseRatio, phase);

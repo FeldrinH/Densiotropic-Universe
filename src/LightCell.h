@@ -5,9 +5,9 @@
 
 using namespace std;
 
-enum Direction { Up, Down, Right, Left, Middle };
+enum Direction { Up, Down, Left, Right, Middle };
 
-const int dirX[5] = { 0, 0, 1, -1, 0 };
+const int dirX[5] = { 0, 0, -1, 1, 0 };
 const int dirY[5] = { -1, 1, 0, 0, 0 };
 
 class LightCell
