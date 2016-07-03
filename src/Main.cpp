@@ -113,10 +113,10 @@ int main(int, char**)
 				else if (mainEvent.button.button == SDL_BUTTON_MIDDLE)
 				{
 					cout << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].lightDensity;
-					for (int i = 0; i < 5; i++)
+					/*for (int i = 0; i < 5; i++)
 					{
 						cout << " " << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].diffuseRatio[i];
-					}
+					}*/
 					cout << endl;
 				}
 			}
@@ -280,8 +280,7 @@ int main(int, char**)
 					}
 					else if (Universe.lightMatrixBase[x][y].lightDensity != 0.0f)
 					{
-						Universe.lightMatrixBase[x][y].lightDensity = 0.0f;
-						Universe.lightMatrixBase[x][y].diffuseRatio = { 0.0f,0.0f,0.0f,0.0f,0.0f };
+						Universe.lightMatrixBase[x][y].clear();
 					}
 				}
 			}

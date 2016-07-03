@@ -38,6 +38,6 @@ void LightEmitter::emit(bool curPhase)
 {
 	if (fullPhase || phase == curPhase)
 	{
-		Universe.lightMatrixBase[x][y].addData(lightDensity, diffuseRatio, 1.0f);
+		Universe.lightMatrixBase[x][y].addData(lightDensity, diffuseRatio[0], diffuseRatio[1], diffuseRatio[2], diffuseRatio[3], diffuseRatio[4], 1.0f);
 	}
 }

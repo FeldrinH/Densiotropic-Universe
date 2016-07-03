@@ -8,23 +8,30 @@ using namespace std;
 
 LightCell::LightCell()
 {
-	lightDensity = 0;
-	diffuseRatio = { 0.0f,0.0f,0.0f,0.0f,0.0f };
+	lightDensity = 0.0f;
+	diffuseUp = 0.0f;
+	diffuseDown = 0.0f;
+	diffuseLeft = 0.0f;
+	diffuseRight = 0.0f;
+	diffuseMiddle = 0.0f;
 }
 
 LightCell::LightCell(const float dens, const array<float, 5> ratio)
 {
-	float ratioMult = 0;
+	float ratioMult = 0.0f;
 
 	for (int a = 0; a < 5; a++)
 	{
 		ratioMult += ratio[a];
 	}
-	ratioMult = 1 / ratioMult;
-	for (int a = 0; a < 5; a++)
-	{
-		diffuseRatio[a] = ratio[a] * ratioMult * dens;
-	}
+
+	ratioMult = dens / ratioMult;
+
+	diffuseUp = ratio[0] * ratioMult;
+	diffuseDown = ratio[1] * ratioMult;
+	diffuseLeft = ratio[2] * ratioMult;
+	diffuseRight = ratio[3] * ratioMult;
+	diffuseMiddle = ratio[4] * ratioMult;
 
 	lightDensity = dens;
 }
@@ -45,28 +52,37 @@ void LightCell::diffuse(const int x, const int y)
 	}*/
 
 	const float ratioMult = 1 / lightDensity;
-	for (int i = 0; i < 5; i++)
-	{
-		Universe.lightMatrixSuper[x + dirX[i]][y + dirY[i]].addData(diffuseRatio[i], diffuseRatio, diffuseRatio[i] * ratioMult);
-	}
+
+	Universe.lightMatrixSuper[x][y - 1].addData(diffuseUp, diffuseUp, diffuseDown, diffuseLeft, diffuseRight, diffuseMiddle, diffuseUp * ratioMult);
+	Universe.lightMatrixSuper[x][y + 1].addData(diffuseDown, diffuseUp, diffuseDown, diffuseLeft, diffuseRight, diffuseMiddle, diffuseDown * ratioMult);
+	Universe.lightMatrixSuper[x - 1][y].addData(diffuseLeft, diffuseUp, diffuseDown, diffuseLeft, diffuseRight, diffuseMiddle, diffuseLeft * ratioMult);
+	Universe.lightMatrixSuper[x + 1][y].addData(diffuseRight, diffuseUp, diffuseDown, diffuseLeft, diffuseRight, diffuseMiddle, diffuseRight * ratioMult);
+	Universe.lightMatrixSuper[x][y].addData(diffuseMiddle, diffuseUp, diffuseDown, diffuseLeft, diffuseRight, diffuseMiddle, diffuseMiddle * ratioMult);
 
 	lightDensity = 0.0F;
-	diffuseRatio.fill(0.0F);
+	diffuseUp = 0.0f;
+	diffuseDown = 0.0f;
+	diffuseLeft = 0.0f;
+	diffuseRight = 0.0f;
+	diffuseMiddle = 0.0f;
 }
 
-inline void LightCell::addData(const float dens, const array<float, 5> ratio, const float mult)
+inline void LightCell::addData(const float dens, const float ratioUp, const float ratioDown, const float ratioLeft, const float ratioRight, const float ratioMiddle, const float mult)
 {
 	lightDensity += dens;
-	for (int i = 0; i < 5; i++)
+	
+	diffuseUp += ratioUp * mult;
+	diffuseDown += ratioDown * mult;
+	diffuseLeft += ratioLeft * mult;
+	diffuseRight += ratioRight * mult;
+	diffuseMiddle += ratioMiddle * mult;
+
+	/*if (diffuseRatio[i] != diffuseRatio[i])
 	{
-		diffuseRatio[i] += ratio[i] * mult;
-		/*if (diffuseRatio[i] != diffuseRatio[i])
-		{
-			lightDensity = 0.0f;
-			diffuseRatio.fill(0.0F);
-			cout << "NaN in addData()" << endl;
-		}*/
-	}
+	lightDensity = 0.0f;
+	diffuseRatio.fill(0.0F);
+	cout << "NaN in addData()" << endl;
+	}*/
 }
 
 /*__forceinline int LightCell::getXDir(int dir)
