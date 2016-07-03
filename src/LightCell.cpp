@@ -9,10 +9,10 @@ using namespace std;
 LightCell::LightCell()
 {
 	lightDensity = 0;
-	diffuseRatio = {0.0f,0.0f,0.0f,0.0f,0.0f};
+	diffuseRatio = { 0.0f,0.0f,0.0f,0.0f,0.0f };
 }
 
-LightCell::LightCell(float dens, array<float, 5> ratio)
+LightCell::LightCell(const float dens, const array<float, 5> ratio)
 {
 	float ratioMult = 0;
 
@@ -23,18 +23,17 @@ LightCell::LightCell(float dens, array<float, 5> ratio)
 	ratioMult = 1 / ratioMult;
 	for (int a = 0; a < 5; a++)
 	{
-		ratio[a] = ratio[a] * ratioMult * dens;
+		diffuseRatio[a] = ratio[a] * ratioMult * dens;
 	}
 
 	lightDensity = dens;
-	diffuseRatio = ratio;
 }
 
 LightCell::~LightCell()
 {
 }
 
-void LightCell::diffuse(int x, int y)
+void LightCell::diffuse(const int x, const int y)
 {
 	/*if (lightDensity != lightDensity)
 	{
@@ -44,8 +43,8 @@ void LightCell::diffuse(int x, int y)
 		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 		SDL_RenderDrawPoint(renderer, x, y);
 	}*/
-	
-	float ratioMult = 1 / lightDensity;
+
+	const float ratioMult = 1 / lightDensity;
 	for (int i = 0; i < 5; i++)
 	{
 		Universe.lightMatrixSuper[x + dirX[i]][y + dirY[i]].addData(diffuseRatio[i], diffuseRatio, diffuseRatio[i] * ratioMult);
@@ -55,7 +54,7 @@ void LightCell::diffuse(int x, int y)
 	diffuseRatio.fill(0.0F);
 }
 
-inline void LightCell::addData(float dens, array<float, 5> ratio, float mult)
+inline void LightCell::addData(const float dens, const array<float, 5> ratio, const float mult)
 {
 	lightDensity += dens;
 	for (int i = 0; i < 5; i++)

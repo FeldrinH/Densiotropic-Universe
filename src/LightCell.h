@@ -14,14 +14,14 @@ class LightCell
 {
 public:
 	LightCell();
-	LightCell(float dens, array<float, 5> ratio);
+	LightCell(const float dens, const array<float, 5> ratio);
 	~LightCell();
 
 	float lightDensity;
 	array<float, 5> diffuseRatio;
 
-	void diffuse(int x, int y);
-	inline void addData(float dens, array<float, 5> ratio, float mult);
+	void diffuse(const int x, const int y);
+	inline void addData(const float dens, const array<float, 5> ratio, const float mult);
 	//__forceinline static int getXDir(int dir);
 	//__forceinline static int getYDir(int dir);
 };
