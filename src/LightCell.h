@@ -2,6 +2,8 @@
 
 #include <cstdint>
 #include <array>
+#include "SDL.h"
+#include <iostream>
 
 using namespace std;
 
@@ -15,7 +17,6 @@ class LightCell
 public:
 	LightCell();
 	LightCell(const float dens, const array<float, 5> ratio);
-	~LightCell();
 
 	float lightDensity;
 
@@ -35,8 +36,36 @@ public:
 		diffuseMiddle = 0.0f;
 	}
 
-	void diffuse(const int x, const int y);
-	inline void addData(const float dens, const float ratioUp, const float ratioDown, const float ratioLeft, const float ratioRight, const float ratioMiddle, const float mult);
+	/*__forceinline void diffuse(const int x, const int y)
+	{
+		if (lightDensity != lightDensity)
+		{
+		lightDensity = 0.0f;
+		diffuseRatio.fill(0.0F);
+		cout << "NaN" << endl;
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		SDL_RenderDrawPoint(renderer, x, y);
+		}
+	}*/
+
+	__forceinline void addData(const float dens, const float ratioUp, const float ratioDown, const float ratioLeft, const float ratioRight, const float ratioMiddle, const float mult)
+	{
+		lightDensity += dens;
+
+		diffuseUp += ratioUp * mult;
+		diffuseDown += ratioDown * mult;
+		diffuseLeft += ratioLeft * mult;
+		diffuseRight += ratioRight * mult;
+		diffuseMiddle += ratioMiddle * mult;
+
+		/*if (diffuseRatio[i] != diffuseRatio[i])
+		{
+		lightDensity = 0.0f;
+		diffuseRatio.fill(0.0F);
+		cout << "NaN in addData()" << endl;
+		}*/
+	}
+
 	//__forceinline static int getXDir(int dir);
 	//__forceinline static int getYDir(int dir);
 };

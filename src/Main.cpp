@@ -201,7 +201,7 @@ int main(int, char**)
 			}
 			else if (command == "reset")
 			{
-				Universe = UniverseChunk(xSize+2, ySize+2);
+				Universe = UniverseChunk(xSize + 2, ySize + 2);
 			}
 			else if (command == "speed")
 			{
@@ -259,28 +259,44 @@ int main(int, char**)
 			heldEmitter.phase = heldEmitter.originalPhase ^ ((heldEmitter.x % 2) == (heldEmitter.y % 2));
 		}
 
+		LightCell* cur;
+
 		for (int i = 0; i < speed; i++)
 		{
 			if (emitHand && heldEmitter.lightDensity != 0.0f)
 			{
-				heldEmitter.emit(curPhase);
+				heldEmitter.emit(curPhase, Universe.lightMatrixBase);
 			}
 			for (int e = 0; e < lightEmitters.size(); e++)
 			{
-				lightEmitters[e].emit(curPhase);
+				lightEmitters[e].emit(curPhase, Universe.lightMatrixBase);
 			}
 
 			for (int x = 1; x < xMax; x++)
 			{
 				for (int y = 1; y < yMax; y++)
 				{
-					if (Universe.lightMatrixBase[x][y].lightDensity >= 0.00390625f)
+					cur = Universe.lightMatrixBase[x].data() + y;
+					if (cur->lightDensity >= 0.00390625f)
 					{
-						Universe.lightMatrixBase[x][y].diffuse(x, y);
+						const float ratioMult = 1 / cur->lightDensity;
+
+						(cur - 1)->addData(cur->diffuseUp, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseUp * ratioMult);
+						(cur + 1)->addData(cur->diffuseDown, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseDown * ratioMult);
+						Universe.lightMatrixSuper[x - 1][y].addData(cur->diffuseLeft, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseLeft * ratioMult);
+						Universe.lightMatrixSuper[x + 1][y].addData(cur->diffuseRight, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseRight * ratioMult);
+						cur->addData(cur->diffuseMiddle, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseMiddle * ratioMult);
+
+						cur->lightDensity = 0.0F;
+						cur->diffuseUp = 0.0f;
+						cur->diffuseDown = 0.0f;
+						cur->diffuseLeft = 0.0f;
+						cur->diffuseRight = 0.0f;
+						cur->diffuseMiddle = 0.0f;
 					}
-					else if (Universe.lightMatrixBase[x][y].lightDensity != 0.0f)
+					else if (cur->lightDensity != 0.0f)
 					{
-						Universe.lightMatrixBase[x][y].clear();
+						cur->clear();
 					}
 				}
 			}

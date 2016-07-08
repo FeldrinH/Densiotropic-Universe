@@ -34,10 +34,10 @@ LightEmitter::LightEmitter(float dens, array<float, 5> ratio, bool phase) : ligh
 	diffuseRatio = ratio;
 }
 
-void LightEmitter::emit(bool curPhase)
+void LightEmitter::emit(bool curPhase, vector<vector<LightCell>>& lightMatrix)
 {
 	if (fullPhase || phase == curPhase)
 	{
-		Universe.lightMatrixBase[x][y].addData(lightDensity, diffuseRatio[0], diffuseRatio[1], diffuseRatio[2], diffuseRatio[3], diffuseRatio[4], 1.0f);
+		lightMatrix[x][y].addData(lightDensity, diffuseRatio[0], diffuseRatio[1], diffuseRatio[2], diffuseRatio[3], diffuseRatio[4], 1.0f);
 	}
 }

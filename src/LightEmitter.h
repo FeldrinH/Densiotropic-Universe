@@ -17,6 +17,6 @@ public:
 	bool phase;
 	bool originalPhase;
 
-	void emit(bool curPhase);
+	void emit(bool curPhase, vector<vector<LightCell>>& lightMatrix);
 };
 

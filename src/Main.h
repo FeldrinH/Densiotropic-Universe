@@ -5,6 +5,4 @@
 #include "UniverseChunk.h"
 #include "SDL.h"
 
-extern UniverseChunk Universe;
-
 extern concurrency::concurrent_queue<string> cmdQueue;
