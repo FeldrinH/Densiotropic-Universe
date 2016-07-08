@@ -4,8 +4,9 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "UniverseChunk.h"
+#include <vector>
 #include "Main.h"
+#include "LightCell.h"
 #include "LightEmitter.h"
 #include "cmdHandler.h"
 
@@ -15,9 +16,8 @@
 
 using namespace std;
 
-UniverseChunk Universe;
 SDL_Renderer* renderer;
-concurrency::concurrent_queue<string> cmdQueue;
+concurrency::concurrent_queue<std::string> cmdQueue;
 
 int main(int, char**)
 {
@@ -58,7 +58,9 @@ int main(int, char**)
 	SDL_FreeSurface(cursorSurface);
 	delete pixel;
 
-	Universe = UniverseChunk(xSize + 2, ySize + 2);
+	vector<vector<LightCell>> lightMatrixBase = vector<vector<LightCell>>(xSize + 2, std::vector<LightCell>(ySize + 2));
+	vector<vector<LightCell>> lightMatrixSuper = vector<vector<LightCell>>(xSize + 2, std::vector<LightCell>(ySize + 2));
+
 	vector<LightEmitter> lightEmitters;
 
 	LightEmitter heldEmitter(0.0f, { 0.0f,0.0f,0.0f,0.0f,0.0f });
@@ -112,7 +114,7 @@ int main(int, char**)
 				}
 				else if (mainEvent.button.button == SDL_BUTTON_MIDDLE)
 				{
-					cout << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].lightDensity;
+					cout << lightMatrixBase[mainEvent.button.x][mainEvent.button.y].lightDensity;
 					/*for (int i = 0; i < 5; i++)
 					{
 						cout << " " << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].diffuseRatio[i];
@@ -201,7 +203,8 @@ int main(int, char**)
 			}
 			else if (command == "reset")
 			{
-				Universe = UniverseChunk(xSize + 2, ySize + 2);
+				lightMatrixBase = vector<vector<LightCell>>(xSize + 2, std::vector<LightCell>(ySize + 2));
+				lightMatrixSuper = vector<vector<LightCell>>(xSize + 2, std::vector<LightCell>(ySize + 2));
 			}
 			else if (command == "speed")
 			{
@@ -265,26 +268,26 @@ int main(int, char**)
 		{
 			if (emitHand && heldEmitter.lightDensity != 0.0f)
 			{
-				heldEmitter.emit(curPhase, Universe.lightMatrixBase);
+				heldEmitter.emit(curPhase, lightMatrixBase);
 			}
 			for (int e = 0; e < lightEmitters.size(); e++)
 			{
-				lightEmitters[e].emit(curPhase, Universe.lightMatrixBase);
+				lightEmitters[e].emit(curPhase, lightMatrixBase);
 			}
 
 			for (int x = 1; x < xMax; x++)
 			{
 				for (int y = 1; y < yMax; y++)
 				{
-					cur = Universe.lightMatrixBase[x].data() + y;
+					cur = lightMatrixBase[x].data() + y;
 					if (cur->lightDensity >= 0.00390625f)
 					{
 						const float ratioMult = 1 / cur->lightDensity;
 
 						(cur - 1)->addData(cur->diffuseUp, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseUp * ratioMult);
 						(cur + 1)->addData(cur->diffuseDown, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseDown * ratioMult);
-						Universe.lightMatrixSuper[x - 1][y].addData(cur->diffuseLeft, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseLeft * ratioMult);
-						Universe.lightMatrixSuper[x + 1][y].addData(cur->diffuseRight, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseRight * ratioMult);
+						lightMatrixSuper[x - 1][y].addData(cur->diffuseLeft, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseLeft * ratioMult);
+						lightMatrixSuper[x + 1][y].addData(cur->diffuseRight, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseRight * ratioMult);
 						cur->addData(cur->diffuseMiddle, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseMiddle * ratioMult);
 
 						cur->lightDensity = 0.0F;
@@ -300,7 +303,7 @@ int main(int, char**)
 					}
 				}
 			}
-			Universe.lightMatrixBase.swap(Universe.lightMatrixSuper);
+			lightMatrixBase.swap(lightMatrixSuper);
 			curPhase = !curPhase;
 		}
 
@@ -315,7 +318,7 @@ int main(int, char**)
 			{
 				//if (Universe.lightMatrixBase[x][y].lightDensity > 0.75F)
 				{
-					cacheDensity = Universe.lightMatrixBase[x][y].lightDensity >= 255.0F ? 255 : (Uint8)Universe.lightMatrixBase[x][y].lightDensity;
+					cacheDensity = lightMatrixBase[x][y].lightDensity >= 255.0F ? 255 : (Uint8)lightMatrixBase[x][y].lightDensity;
 					pixels[(y - 1) * xSize + x - 1] = cacheDensity | cacheDensity << 8 | cacheDensity << 16;
 				}
 				/*else

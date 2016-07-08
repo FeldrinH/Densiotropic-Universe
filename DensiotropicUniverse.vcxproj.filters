@@ -24,13 +24,7 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\UniverseChunk.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\LightCell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MatterCell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\LightEmitter.cpp">
@@ -41,13 +35,7 @@
     <ClInclude Include="src\cmdHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\UniverseChunk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\LightCell.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MatterCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Main.h">

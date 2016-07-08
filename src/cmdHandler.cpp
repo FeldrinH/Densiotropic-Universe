@@ -4,7 +4,7 @@
 
 void getCmdIn()
 {
-	string cacheString;
+	std::string cacheString;
 	while (true)
 	{
 		std::getline(std::cin, cacheString);

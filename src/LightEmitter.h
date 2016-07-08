@@ -1,6 +1,10 @@
 #pragma once
+
 #include <array>
+#include <vector>
 #include "Main.h"
+#include "LightCell.h"
+
 using namespace std;
 
 class LightEmitter
