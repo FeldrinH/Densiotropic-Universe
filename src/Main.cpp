@@ -84,9 +84,19 @@ int main(int, char**)
 				cout << "Deuniversifying..." << endl;
 				isRunning = false;
 			}
-			else if (mainEvent.type == SDL_KEYDOWN && mainEvent.key.keysym.sym == SDLK_r)
+			else if (mainEvent.type == SDL_KEYDOWN)
 			{
-				delay = 0;
+				if (mainEvent.key.keysym.sym == SDLK_r)
+				{
+					delay = 0;
+				}
+				else if (mainEvent.key.keysym.sym == SDLK_e)
+				{
+					int mouseX, mouseY;
+					SDL_GetMouseState(&mouseX, &mouseY);
+					LightCell* lc = &lightMatrixBase[mouseX][mouseY];
+					cout << lc->lightDensity << " " << lc->diffuseUp << " " << lc->diffuseDown << " " << lc->diffuseLeft << " " << lc->diffuseRight << " " << lc->diffuseMiddle << endl;
+				}
 			}
 			else if (mainEvent.type == SDL_MOUSEBUTTONDOWN)
 			{
@@ -116,12 +126,8 @@ int main(int, char**)
 				}
 				else if (mainEvent.button.button == SDL_BUTTON_MIDDLE)
 				{
-					cout << lightMatrixBase[mainEvent.button.x][mainEvent.button.y].lightDensity;
-					/*for (int i = 0; i < 5; i++)
-					{
-						cout << " " << Universe.lightMatrixBase[mainEvent.button.x][mainEvent.button.y].diffuseRatio[i];
-					}*/
-					cout << endl;
+					LightCell* lc = &lightMatrixBase[mainEvent.button.x][mainEvent.button.y];
+					cout << lc->lightDensity << " " << lc->diffuseUp << " " << lc->diffuseDown << " " << lc->diffuseLeft << " " << lc->diffuseRight << " " << lc->diffuseMiddle << endl;
 				}
 			}
 			else if (mainEvent.type == SDL_MOUSEBUTTONUP && mainEvent.button.button == SDL_BUTTON_LEFT)
