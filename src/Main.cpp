@@ -291,6 +291,7 @@ int main(int, char**)
 		}
 
 		LightCell* cur;
+		LightCell* curSuper;
 
 		for (int i = 0; i < speed; i++)
 		{
@@ -308,15 +309,16 @@ int main(int, char**)
 				for (int y = 1; y < yMax; y++)
 				{
 					cur = lightMatrixBase[x].data() + y;
+					curSuper = lightMatrixSuper[x].data() + y;
 					if (cur->lightDensity >= 0.00390625f)
 					{
 						const float ratioMult = 1 / cur->lightDensity;
 
-						(cur - 1)->addData(cur->diffuseUp, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseUp * ratioMult);
-						(cur + 1)->addData(cur->diffuseDown, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseDown * ratioMult);
+						(curSuper - 1)->addData(cur->diffuseUp, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseUp * ratioMult);
+						(curSuper + 1)->addData(cur->diffuseDown, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseDown * ratioMult);
 						lightMatrixSuper[x - 1][y].addData(cur->diffuseLeft, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseLeft * ratioMult);
 						lightMatrixSuper[x + 1][y].addData(cur->diffuseRight, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseRight * ratioMult);
-						cur->addData(cur->diffuseMiddle, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseMiddle * ratioMult);
+						curSuper->addData(cur->diffuseMiddle, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseMiddle * ratioMult);
 
 						cur->lightDensity = 0.0F;
 						cur->diffuseUp = 0.0f;
