@@ -44,7 +44,7 @@ int main(int, char**)
 	int yMax = ySize + 1;
 
 	SDL_Window* window = SDL_CreateWindow(VERSION_NAME, 20, 50, xSize, ySize, SDL_WINDOW_SHOWN | SDL_WINDOW_MOUSE_FOCUS);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_PRESENTVSYNC);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 	Uint32* pixels = new Uint32[xSize*ySize];
 	SDL_Texture* renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, xSize, ySize);
 	SDL_Event mainEvent;
@@ -65,6 +65,8 @@ int main(int, char**)
 
 	LightEmitter heldEmitter(0.0f, { 0.0f,0.0f,0.0f,0.0f,0.0f });
 
+	int delay = 0;
+
 	int speed = 10;
 	bool curPhase = true;
 	bool emitHand = false;
@@ -82,9 +84,9 @@ int main(int, char**)
 				cout << "Deuniversifying..." << endl;
 				isRunning = false;
 			}
-			else if (mainEvent.type == SDL_KEYDOWN)
+			else if (mainEvent.type == SDL_KEYDOWN && mainEvent.key.keysym.sym == SDLK_r)
 			{
-
+				delay = 0;
 			}
 			else if (mainEvent.type == SDL_MOUSEBUTTONDOWN)
 			{
@@ -128,129 +130,149 @@ int main(int, char**)
 			}
 		}
 
-		if (cmdQueue.try_pop(cmdCache))
+		if (delay < 1)
 		{
-			istringstream cmdIn(cmdCache);
-			string command;
-			cmdIn >> command;
-			if (command == "emitter")
+			if (cmdQueue.try_pop(cmdCache))
 			{
-				float lightDensity;
-				array<float, 5> diffuseRatio;
-				bool phase;
-				cmdIn >> lightDensity >> diffuseRatio[Up] >> diffuseRatio[Down] >> diffuseRatio[Left] >> diffuseRatio[Right] >> diffuseRatio[Middle];
-				if (cmdIn >> phase)
+				istringstream cmdIn(cmdCache);
+				string command;
+				cmdIn >> command;
+				if (command == "emitter")
 				{
-					heldEmitter = LightEmitter(lightDensity, diffuseRatio, phase);
+					float lightDensity;
+					array<float, 5> diffuseRatio;
+					bool phase;
+					cmdIn >> lightDensity >> diffuseRatio[Up] >> diffuseRatio[Down] >> diffuseRatio[Left] >> diffuseRatio[Right] >> diffuseRatio[Middle];
+					if (cmdIn >> phase)
+					{
+						heldEmitter = LightEmitter(lightDensity, diffuseRatio, phase);
+					}
+					else
+					{
+						heldEmitter = LightEmitter(lightDensity, diffuseRatio);
+					}
+
+					cout << "Density: " << lightDensity << "  Ratio:";
+					for (int i = 0; i < 5; i++)
+					{
+						cout << " " << heldEmitter.diffuseRatio[i];
+					}
+					if (!heldEmitter.fullPhase)
+					{
+						cout << "  Phase: " << heldEmitter.phase;
+					}
+					cout << endl;
+				}
+				else if (command == "emplace")
+				{
+					int x, y;
+					cmdIn >> x >> y;
+					for (int e = 0; e < lightEmitters.size(); e++)
+					{
+						if (lightEmitters[e].x == x && lightEmitters[e].y == y)
+						{
+							lightEmitters.erase(lightEmitters.begin() + e);
+							cout << "Removed emitter: " << x << "," << y << endl;
+							break;
+						}
+					}
+					if (heldEmitter.lightDensity != 0.0f)
+					{
+						lightEmitters.push_back(heldEmitter);
+						lightEmitters.back().x = x;
+						lightEmitters.back().y = y;
+						lightEmitters.back().phase = lightEmitters.back().originalPhase ^ ((x % 2) == (y % 2));
+						cout << "Placed emitter: " << lightEmitters.back().x << "," << lightEmitters.back().y << endl;
+					}
+				}
+				else if (command == "undo")
+				{
+					if (!lightEmitters.empty())
+					{
+						lightEmitters.pop_back();
+					}
+				}
+				else if (command == "remove")
+				{
+					int removeNum;
+					cmdIn >> removeNum;
+					if (removeNum < lightEmitters.size())
+					{
+						lightEmitters.erase(lightEmitters.begin() + removeNum);
+					}
+				}
+				else if (command == "clear")
+				{
+					lightEmitters.clear();
+				}
+				else if (command == "reset")
+				{
+					lightMatrixBase = vector<vector<LightCell>>(xSize + 2, std::vector<LightCell>(ySize + 2));
+					lightMatrixSuper = vector<vector<LightCell>>(xSize + 2, std::vector<LightCell>(ySize + 2));
+				}
+				else if (command == "speed")
+				{
+					cmdIn >> speed;
+					cout << "Set speed: " << speed << endl;
+				}
+				else if (command == "load")
+				{
+					string fileName;
+					cmdIn >> fileName;
+
+					string newCmd;
+					ifstream loadFile(fileName);
+					while (getline(loadFile, newCmd))
+					{
+						if (newCmd.substr(0, 2) != "//")
+						{
+							cmdQueue.push(newCmd);
+						}
+					}
+
+					cout << "Commands loaded from: " << fileName << endl;
+				}
+				else if (command == "save")
+				{
+					string fileName;
+					cmdIn >> fileName;
+
+					ofstream saveFile;
+					saveFile.open(fileName, ofstream::trunc);
+					for (int e = 0; e < lightEmitters.size(); e++)
+					{
+						LightEmitter em = lightEmitters[e];
+						saveFile << "emitter " << em.lightDensity;
+						for (int i = 0; i < 5; i++)
+						{
+							saveFile << " " << em.diffuseRatio[i];
+						}
+						if (!em.fullPhase)
+						{
+							saveFile << " " << em.originalPhase;
+						}
+						saveFile << endl;
+						saveFile << "emplace " << em.x << " " << em.y << endl;
+					}
+					saveFile.close();
+
+					cout << "Emitters saved as: " << fileName << endl;
+				}
+				else if (command == "sleep")
+				{
+					int duration;
+					cmdIn >> duration;
+					delay = duration;
 				}
 				else
 				{
-					heldEmitter = LightEmitter(lightDensity, diffuseRatio);
-				}
-
-				cout << "Density: " << lightDensity << "  Ratio:";
-				for (int i = 0; i < 5; i++)
-				{
-					cout << " " << heldEmitter.diffuseRatio[i];
-				}
-				if (!heldEmitter.fullPhase)
-				{
-					cout << "  Phase: " << heldEmitter.phase;
-				}
-				cout << endl;
-			}
-			else if (command == "emplace")
-			{
-				int x, y;
-				cmdIn >> x >> y;
-				for (int e = 0; e < lightEmitters.size(); e++)
-				{
-					if (lightEmitters[e].x == x && lightEmitters[e].y == y)
-					{
-						lightEmitters.erase(lightEmitters.begin() + e);
-						cout << "Removed emitter: " << x << "," << y << endl;
-						break;
-					}
-				}
-				if (heldEmitter.lightDensity != 0.0f)
-				{
-					lightEmitters.push_back(heldEmitter);
-					lightEmitters.back().x = x;
-					lightEmitters.back().y = y;
-					lightEmitters.back().phase = lightEmitters.back().originalPhase ^ ((x % 2) == (y % 2));
-					cout << "Placed emitter: " << lightEmitters.back().x << "," << lightEmitters.back().y << endl;
+					cout << "Unknown command: " << cmdCache << endl;
 				}
 			}
-			else if (command == "undo")
-			{
-				if (!lightEmitters.empty())
-				{
-					lightEmitters.pop_back();
-				}
-			}
-			else if (command == "remove")
-			{
-				int removeNum;
-				cmdIn >> removeNum;
-				if (removeNum < lightEmitters.size())
-				{
-					lightEmitters.erase(lightEmitters.begin() + removeNum);
-				}
-			}
-			else if (command == "clear")
-			{
-				lightEmitters.clear();
-			}
-			else if (command == "reset")
-			{
-				lightMatrixBase = vector<vector<LightCell>>(xSize + 2, std::vector<LightCell>(ySize + 2));
-				lightMatrixSuper = vector<vector<LightCell>>(xSize + 2, std::vector<LightCell>(ySize + 2));
-			}
-			else if (command == "speed")
-			{
-				cmdIn >> speed;
-				cout << "Set speed: " << speed << endl;
-			}
-			else if (command == "load")
-			{
-				string fileName;
-				cmdIn >> fileName;
-
-				string newCmd;
-				ifstream loadFile(fileName);
-				while (getline(loadFile, newCmd))
-				{
-					cmdQueue.push(newCmd);
-				}
-
-				cout << "Emitters loaded from: " << fileName << endl;
-			}
-			else if (command == "save")
-			{
-				string fileName;
-				cmdIn >> fileName;
-
-				ofstream saveFile;
-				saveFile.open(fileName, ofstream::trunc);
-				for (int e = 0; e < lightEmitters.size(); e++)
-				{
-					LightEmitter em = lightEmitters[e];
-					saveFile << "emitter " << em.lightDensity;
-					for (int i = 0; i < 5; i++)
-					{
-						saveFile << " " << em.diffuseRatio[i];
-					}
-					if (!em.fullPhase)
-					{
-						saveFile << " " << em.originalPhase;
-					}
-					saveFile << endl;
-					saveFile << "emplace " << em.x << " " << em.y << endl;
-				}
-				saveFile.close();
-
-				cout << "Emitters saved as: " << fileName << endl;
-			}
+		}
+		else
+		{
+			delay--;
 		}
 
 
