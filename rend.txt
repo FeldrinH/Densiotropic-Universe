@@ -1,3 +1,7 @@
+//Rendering benchmark. Sets speed to 0 after a while, so fps is affected by rendering only;
+clear
+reset
+speed 10
 emitter 256 1 0 0 0
 emplace 528 572
 emitter 256 0 1 0 0
@@ -6,3 +10,5 @@ emitter 256 0 0 1 0
 emplace 632 83
 emitter 256 0 0 0 1
 emplace 27 137
+sleep 1000
+speed 0

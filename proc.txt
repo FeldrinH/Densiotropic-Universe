@@ -1,0 +1,5 @@
+//Static processing benchmark. No visible movement after beam reaches edge, so fps doesn't fluctuate
+clear
+reset
+emitter 256 1 0 0 1 0
+emplace 40 600
