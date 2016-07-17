@@ -48,7 +48,7 @@ public:
 		}
 	}*/
 
-	__forceinline void addData(const float dens, const float ratioUp, const float ratioDown, const float ratioLeft, const float ratioRight, const float ratioMiddle, const float mult)
+	inline void addData(const float dens, const float ratioUp, const float ratioDown, const float ratioLeft, const float ratioRight, const float ratioMiddle, const float mult)
 	{
 		lightDensity += dens;
 
