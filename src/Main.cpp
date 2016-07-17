@@ -327,7 +327,7 @@ int main(int, char**)
 
 					if (cur->lightDensity >= 0.00390625f)
 					{
-						const float ratioMult = 1 / cur->lightDensity;
+						const float ratioMult = 1.0f / cur->lightDensity;
 
 						(curSuper - 1)->addData(cur->diffuseUp, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseUp * ratioMult);
 						(curSuper + 1)->addData(cur->diffuseDown, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseDown * ratioMult);
@@ -335,21 +335,11 @@ int main(int, char**)
 						lightMatrixSuper[x + 1][y].addData(cur->diffuseRight, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseRight * ratioMult);
 						curSuper->addData(cur->diffuseMiddle, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseMiddle * ratioMult);
 
-						cur->lightDensity = 0.0F;
-						cur->diffuseUp = 0.0f;
-						cur->diffuseDown = 0.0f;
-						cur->diffuseLeft = 0.0f;
-						cur->diffuseRight = 0.0f;
-						cur->diffuseMiddle = 0.0f;
+						memset(cur, 0, sizeof(LightCell));
 					}
 					else if (cur->lightDensity != 0.0f)
 					{
-						cur->lightDensity = 0.0F;
-						cur->diffuseUp = 0.0f;
-						cur->diffuseDown = 0.0f;
-						cur->diffuseLeft = 0.0f;
-						cur->diffuseRight = 0.0f;
-						cur->diffuseMiddle = 0.0f;
+						memset(cur, 0, sizeof(LightCell));
 					}
 				}
 			}
