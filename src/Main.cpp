@@ -30,21 +30,35 @@ int main(int, char**)
 
 	bool isRunning = true;
 
-	string size = "";
-	getline(cin, size);
 	int xSize, ySize = 0;
-	istringstream s(size);
-	s >> xSize >> ySize;
-	if (xSize == 0 || ySize == 0)
+	bool vsync;
+
 	{
-		xSize = 640;
-		ySize = 640;
+		string input, vsyncin;
+		cout << "xSize ySize vsync (enter for defaults): ";
+		getline(cin, input);
+		istringstream s(input);
+		s >> xSize >> ySize;
+		if (xSize == 0 || ySize == 0)
+		{
+			xSize = 640;
+			ySize = 640;
+		}
+		if (s >> vsyncin)
+		{
+			vsync = vsyncin != "false";
+		}
+		else
+		{
+			vsync = true;
+		}
 	}
+
 	int xMax = xSize + 1;
 	int yMax = ySize + 1;
 
 	SDL_Window* window = SDL_CreateWindow(VERSION_NAME, 20, 50, xSize, ySize, SDL_WINDOW_SHOWN | SDL_WINDOW_MOUSE_FOCUS);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | (vsync ? SDL_RENDERER_PRESENTVSYNC : 0));
 	Uint32* pixels = new Uint32[xSize*ySize];
 	SDL_Texture* renderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, xSize, ySize);
 	SDL_Event mainEvent;
