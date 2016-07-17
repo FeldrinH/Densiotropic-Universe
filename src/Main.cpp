@@ -324,6 +324,7 @@ int main(int, char**)
 				{
 					cur = lightMatrixBase[x].data() + y;
 					curSuper = lightMatrixSuper[x].data() + y;
+
 					if (cur->lightDensity >= 0.00390625f)
 					{
 						const float ratioMult = 1 / cur->lightDensity;
@@ -343,7 +344,12 @@ int main(int, char**)
 					}
 					else if (cur->lightDensity != 0.0f)
 					{
-						cur->clear();
+						cur->lightDensity = 0.0F;
+						cur->diffuseUp = 0.0f;
+						cur->diffuseDown = 0.0f;
+						cur->diffuseLeft = 0.0f;
+						cur->diffuseRight = 0.0f;
+						cur->diffuseMiddle = 0.0f;
 					}
 				}
 			}

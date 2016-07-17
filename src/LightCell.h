@@ -26,7 +26,7 @@ public:
 	float diffuseRight;
 	float diffuseMiddle;
 
-	__forceinline void clear()
+	/*__forceinline void clear()
 	{
 		lightDensity = 0.0f;
 		diffuseUp = 0.0f;
@@ -34,7 +34,7 @@ public:
 		diffuseLeft = 0.0f;
 		diffuseRight = 0.0f;
 		diffuseMiddle = 0.0f;
-	}
+	}*/
 
 	/*__forceinline void diffuse(const int x, const int y)
 	{
