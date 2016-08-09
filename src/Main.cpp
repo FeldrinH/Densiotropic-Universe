@@ -30,7 +30,7 @@ int main(int, char**)
 
 	bool isRunning = true;
 
-	int xSize, ySize = 0;
+	size_t xSize, ySize = 0;
 	bool vsync;
 
 	{
@@ -54,8 +54,8 @@ int main(int, char**)
 		}
 	}
 
-	int xMax = xSize + 1;
-	int yMax = ySize + 1;
+	size_t xMax = xSize + 1;
+	size_t yMax = ySize + 1;
 
 	SDL_Window* window = SDL_CreateWindow(VERSION_NAME, 20, 50, xSize, ySize, SDL_WINDOW_SHOWN | SDL_WINDOW_MOUSE_FOCUS);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | (vsync ? SDL_RENDERER_PRESENTVSYNC : 0));
@@ -120,7 +120,7 @@ int main(int, char**)
 				}
 				else if (mainEvent.button.button == SDL_BUTTON_RIGHT)
 				{
-					for (int e = 0; e < lightEmitters.size(); ++e)
+					for (size_t e = 0; e < lightEmitters.size(); ++e)
 					{
 						if (lightEmitters[e].x == mainEvent.button.x && lightEmitters[e].y == mainEvent.button.y)
 						{
@@ -190,7 +190,7 @@ int main(int, char**)
 				{
 					int x, y;
 					cmdIn >> x >> y;
-					for (int e = 0; e < lightEmitters.size(); ++e)
+					for (size_t e = 0; e < lightEmitters.size(); ++e)
 					{
 						if (lightEmitters[e].x == x && lightEmitters[e].y == y)
 						{
@@ -217,7 +217,7 @@ int main(int, char**)
 				}
 				else if (command == "remove")
 				{
-					int removeNum;
+					size_t removeNum;
 					cmdIn >> removeNum;
 					if (removeNum < lightEmitters.size())
 					{
@@ -262,7 +262,7 @@ int main(int, char**)
 
 					ofstream saveFile;
 					saveFile.open(fileName, ofstream::trunc);
-					for (int e = 0; e < lightEmitters.size(); ++e)
+					for (size_t e = 0; e < lightEmitters.size(); ++e)
 					{
 						LightEmitter em = lightEmitters[e];
 						saveFile << "emitter " << em.lightDensity;
@@ -316,14 +316,14 @@ int main(int, char**)
 			{
 				heldEmitter.emit(curPhase, lightMatrixBase);
 			}
-			for (int e = 0; e < lightEmitters.size(); ++e)
+			for (size_t e = 0; e < lightEmitters.size(); ++e)
 			{
 				lightEmitters[e].emit(curPhase, lightMatrixBase);
 			}
 
-			for (int x = 1; x < xMax; ++x)
+			for (size_t x = 1; x < xMax; ++x)
 			{
-				for (int y = 1; y < yMax; ++y)
+				for (size_t y = 1; y < yMax; ++y)
 				{
 					cur = lightMatrixBase[x].data() + y;
 					curSuper = lightMatrixSuper[x].data() + y;
@@ -337,7 +337,7 @@ int main(int, char**)
 						lightMatrixSuper[x - 1][y].addData(cur->diffuseLeft, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseLeft * ratioMult);
 						lightMatrixSuper[x + 1][y].addData(cur->diffuseRight, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseRight * ratioMult);
 						curSuper->addData(cur->diffuseMiddle, cur->diffuseUp, cur->diffuseDown, cur->diffuseLeft, cur->diffuseRight, cur->diffuseMiddle, cur->diffuseMiddle * ratioMult);
-
+						
 						memset(cur, 0, sizeof(LightCell));
 					}
 					else if (cur->lightDensity != 0.0f)
@@ -355,9 +355,9 @@ int main(int, char**)
 
 		memset(pixels, 0, xSize * ySize * sizeof(Uint32));
 		Uint8 cacheDensity;
-		for (int x = 1; x < xMax; ++x)
+		for (size_t x = 1; x < xMax; ++x)
 		{
-			for (int y = 1; y < yMax; ++y)
+			for (size_t y = 1; y < yMax; ++y)
 			{
 				//if (Universe.lightMatrixBase[x][y].lightDensity > 0.75F)
 				{
