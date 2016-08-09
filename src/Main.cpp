@@ -120,7 +120,7 @@ int main(int, char**)
 				}
 				else if (mainEvent.button.button == SDL_BUTTON_RIGHT)
 				{
-					for (int e = 0; e < lightEmitters.size(); e++)
+					for (int e = 0; e < lightEmitters.size(); ++e)
 					{
 						if (lightEmitters[e].x == mainEvent.button.x && lightEmitters[e].y == mainEvent.button.y)
 						{
@@ -157,7 +157,10 @@ int main(int, char**)
 				istringstream cmdIn(cmdCache);
 				string command;
 				cmdIn >> command;
-				if (command == "emitter")
+				if (command == "")
+				{
+				}
+				else if (command == "emitter")
 				{
 					float lightDensity;
 					array<float, 5> diffuseRatio;
@@ -173,7 +176,7 @@ int main(int, char**)
 					}
 
 					cout << "Density: " << lightDensity << "  Ratio:";
-					for (int i = 0; i < 5; i++)
+					for (int i = 0; i < 5; ++i)
 					{
 						cout << " " << heldEmitter.diffuseRatio[i];
 					}
@@ -187,7 +190,7 @@ int main(int, char**)
 				{
 					int x, y;
 					cmdIn >> x >> y;
-					for (int e = 0; e < lightEmitters.size(); e++)
+					for (int e = 0; e < lightEmitters.size(); ++e)
 					{
 						if (lightEmitters[e].x == x && lightEmitters[e].y == y)
 						{
@@ -259,11 +262,11 @@ int main(int, char**)
 
 					ofstream saveFile;
 					saveFile.open(fileName, ofstream::trunc);
-					for (int e = 0; e < lightEmitters.size(); e++)
+					for (int e = 0; e < lightEmitters.size(); ++e)
 					{
 						LightEmitter em = lightEmitters[e];
 						saveFile << "emitter " << em.lightDensity;
-						for (int i = 0; i < 5; i++)
+						for (int i = 0; i < 5; ++i)
 						{
 							saveFile << " " << em.diffuseRatio[i];
 						}
@@ -307,20 +310,20 @@ int main(int, char**)
 		LightCell* cur;
 		LightCell* curSuper;
 
-		for (int i = 0; i < speed; i++)
+		for (int i = 0; i < speed; ++i)
 		{
 			if (emitHand && heldEmitter.lightDensity != 0.0f)
 			{
 				heldEmitter.emit(curPhase, lightMatrixBase);
 			}
-			for (int e = 0; e < lightEmitters.size(); e++)
+			for (int e = 0; e < lightEmitters.size(); ++e)
 			{
 				lightEmitters[e].emit(curPhase, lightMatrixBase);
 			}
 
-			for (int x = 1; x < xMax; x++)
+			for (int x = 1; x < xMax; ++x)
 			{
-				for (int y = 1; y < yMax; y++)
+				for (int y = 1; y < yMax; ++y)
 				{
 					cur = lightMatrixBase[x].data() + y;
 					curSuper = lightMatrixSuper[x].data() + y;
@@ -352,9 +355,9 @@ int main(int, char**)
 
 		memset(pixels, 0, xSize * ySize * sizeof(Uint32));
 		Uint8 cacheDensity;
-		for (int x = 1; x < xMax; x++)
+		for (int x = 1; x < xMax; ++x)
 		{
-			for (int y = 1; y < yMax; y++)
+			for (int y = 1; y < yMax; ++y)
 			{
 				//if (Universe.lightMatrixBase[x][y].lightDensity > 0.75F)
 				{
